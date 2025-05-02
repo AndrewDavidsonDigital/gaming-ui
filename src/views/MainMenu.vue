@@ -119,7 +119,7 @@ const menuCollection = ref<string[][]>([
             {{ title }}
           </h2>
           <img
-            class="scale-[70%] mask-x-both"
+            class="scale-[80%]"
             :src="elementHrUnderline"
             alt=""
             aria-hidden
