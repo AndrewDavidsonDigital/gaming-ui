@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+  import { RouterView } from 'vue-router';
+  import Navigation from '@/components/Navigation.vue';
 </script>
 
 <template>
   <main class="bg-slate-800 text-green-500 min-h-screen min-w-full">
-    <header class="h-fit  bg-slate-900">
-      <nav class="flex gap-x-4 justify-center">
-        <RouterLink to="/" class="hover:underline">Home</RouterLink>
-        <RouterLink to="/about" class="hover:underline">About</RouterLink>
-      </nav>
-    </header>
-
-    <RouterView />
+    <Navigation />
+    <section
+      id="ConstrainedCanvas"
+      class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw]"
+    >
+      <RouterView />
+    </section>
   </main>
 </template>
