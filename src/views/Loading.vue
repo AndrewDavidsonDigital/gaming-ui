@@ -1,33 +1,66 @@
 <script setup lang="ts">
+  import Example from '@/components/Example.vue';
+  import { onMounted, ref, useTemplateRef } from 'vue';
+
+  import img from '@/assets/examples/Civ-7/Loading.png'
+
+  const DURATION_IN_MILLS = 10000;
+  const loadingDuration = ref(`${DURATION_IN_MILLS}ms`);
+  
+  const hourglassSand = useTemplateRef('hg-sand');
+  const hourglassWrapper = useTemplateRef('hg-wrapper');
+
+  onMounted(() => {
+    setTimeout(() => {
+      
+      hourglassWrapper.value?.classList.add('animation-pause', 'opacity-0');
+      hourglassSand.value?.classList.add('animation-pause');
+    },
+    DURATION_IN_MILLS)
+  })
 
 </script>
 
 <template>
-  <section class="bg-black size-full grid-area-stack relative">
-    <div 
-      class="
-        self-center mx-auto 
-        w-14 h-18 
-        bg-amber-600 
-        hourglass-clip
-        animate-staggered-rotate
-      "
-    >
-    </div>
-    <div 
-      class="
-        self-center mx-auto
-        w-14 h-18
-        bg-black
-        hourglass-clip-inner
-        animate-staggered-rotate
-      "
-    >
-      <div class="w-full h-8 bg-white animate-sand-fall"></div>
-    </div>
-    <div class="w-full bg-amber-700 h-4 self-end"></div>
-    <div class="w-[2%] bg-amber-500 h-4 self-end animate-loading-width"></div>
+  <section
+    id="ConstrainedCanvas"
+    class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw]"
+  >
+    <section class="bg-black size-full grid-area-stack relative">
+      <div
+        ref="hg-wrapper"
+        class="grid-area-stack relative self-center mx-auto animate-staggered-rotate scale-[35%]"
+      >
+        <div 
+          ref="hg-outer"
+          class="
+          w-14 h-18 
+          bg-amber-600 
+          hourglass-clip
+        "
+        >
+        </div>
+        <div 
+          ref="hg-inner"
+          class="
+          w-14 h-18
+          bg-black
+          hourglass-clip-inner
+        "
+        >
+          <div 
+            ref="hg-sand"
+            class="w-full h-8 bg-white animate-sand-fall"
+          ></div>
+        </div>
+      </div>
+      <div class="w-full bg-amber-700 h-[1%] self-end"></div>
+      <div class="w-[2%] bg-amber-500 h-[1%] self-end animate-loading-width"></div>
+    </section>
   </section>
+  <Example :path="img">
+    <p>Rather than using a <span class="bg-black text-white px-1 rounded-sm">clip-path</span> and translate for the hourglass and sand, these should be a small animated gif / video, of the sand falling once, then we can rotate them, as this would halve the size of the video / gif embed</p>
+  </Example>
 </template>
 
 <style lang="css" scoped>
@@ -82,7 +115,7 @@
 
   .animate-loading-width{
     animation-fill-mode: forwards;
-    animation-duration: 10s;
+    animation-duration: v-bind(loadingDuration);
     animation-name: loadingWidth;
   }
 

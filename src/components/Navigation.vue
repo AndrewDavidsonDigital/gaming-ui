@@ -1,6 +1,5 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup lang="ts">
-import { resolveRouteName } from "./Navigation.ts"
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue';
 import { routes } from '@/router'
