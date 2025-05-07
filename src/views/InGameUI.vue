@@ -143,7 +143,7 @@
 
 <template>
   <section
-    id="ConstrainedCanvas"
+    id="GameState"
     class="w-[80vw] bg-slate-800 mx-auto rounded-md p-4 flex flex-col"
   >
     <details>
