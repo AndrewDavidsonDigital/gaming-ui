@@ -29,12 +29,12 @@
     <section class="bg-black size-full grid-area-stack relative">
       <div
         ref="hg-wrapper"
-        class="grid-area-stack relative self-center mx-auto animate-staggered-rotate scale-[35%]"
+        class="grid-area-stack relative self-center mx-auto animate-staggered-rotate "
       >
         <div 
           ref="hg-outer"
           class="
-          w-14 h-18 
+          w-[3vw] h-[4vw] 
           bg-amber-600 
           hourglass-clip
         "
@@ -43,14 +43,14 @@
         <div 
           ref="hg-inner"
           class="
-          w-14 h-18
+          w-[3vw] h-[4vw] 
           bg-black
           hourglass-clip-inner
         "
         >
           <div 
             ref="hg-sand"
-            class="w-full h-8 bg-white animate-sand-fall"
+            class="w-full h-[2vw] bg-white animate-sand-fall"
           ></div>
         </div>
       </div>

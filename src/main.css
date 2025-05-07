@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Carrois+Gothic&display=swap');
 @import 'tailwindcss';
 
+:root{
+  --font-size-dynamic: 1vw;
+}
 
 .civilization-font-equiv {
   font-family: "Carrois Gothic", sans-serif;
@@ -9,7 +12,13 @@
   letter-spacing: 4px;
 }
 
+
 /* RESET */
+@theme {
+  --color-civ-brand: oklch(0.6 0.07 66.93);
+  --color-civ-gold: oklch(0.77 0.14 91.04);
+  --color-civ-silver: oklch(0.9 0.03 255);
+}
 
 /* Balance headings */
 h1,h2,h3,h4,h5,h6 {
@@ -36,7 +45,13 @@ header, footer, main, section, article {
     grid-area: stack;
   }      
 }
-
+.grid-area-stack-inner {
+  display: grid;
+  grid-template-areas: "innerStack";
+  >* {
+    grid-area: innerStack;
+  }      
+}
 
 .animation-pause {
   animation-play-state: paused;
@@ -44,3 +59,20 @@ header, footer, main, section, article {
 .animation-play {
   animation-play-state: running;
 }
+
+
+.dynamic-font-size {
+  --font-size-dynamic: 1vw;
+  font-size: var(--font-size-dynamic);
+}
+
+.dynamic-font-size-2 {
+  --font-size-dynamic: 2vw;
+  font-size: var(--font-size-dynamic);
+}
+.dynamic-font-size-3 {
+  --font-size-dynamic: 3vw;
+  font-size: var(--font-size-dynamic);
+}
+
+
