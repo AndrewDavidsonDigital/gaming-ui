@@ -14,11 +14,6 @@
   type AgeType = 'Antiquity' | 'Exploration' | 'Modern';
   type GameSpeedType = ['marathon', 2] |['long', 5] | ['average', 10] | ['short', 25] | ['quick', 50];
 
-  interface IGameSpeed {
-    name: string;
-    turnDuration: number;
-  }
-
   interface IAge {
     name: AgeType;
     turnNumber: number;
@@ -113,6 +108,37 @@
 
     return `${Math.ceil(researchRemaining/rate)}`;
   }
+
+  type GameStateKey = keyof typeof gameState.value;
+
+  function handleGameStateInput(key: GameStateKey, el: string, e: Event) {
+    const target = e.target as HTMLInputElement;
+    if (!target) return;
+    
+    const stateObj = gameState.value[key] as Record<string, any>;
+    
+    if (el === 'progress') {
+      stateObj[el] = Math.min(Number(target.value), 100);
+    } else {
+      stateObj[el] = target.value;
+    }
+  }
+
+  function handleArrayInput(key: GameStateKey, el: string, e: Event) {
+    const target = e.target as HTMLInputElement;
+    if (!target) return;
+    
+    const stateObj = gameState.value[key] as Record<string, any>;
+    stateObj[el] = target.value.split(',');
+  }
+
+  function handleGameSpeedInput(key: GameStateKey, el: string, e: Event) {
+    const target = e.target as HTMLSelectElement;
+    if (!target) return;
+    
+    const stateObj = gameState.value[key] as Record<string, any>;
+    stateObj[el] = target.value.split(',').map((val, i) => i === 1 ? Number(val) : val);
+  }
 </script>
 
 <template>
@@ -197,6 +223,9 @@
                   type="number"
                   class="border border-emerald-600 rounded-md px-2 max-w-40"
                   min="0"
+                  :max="el === 'progress' ? 100 : undefined"
+                  @input="(e: Event) => handleGameStateInput(key as GameStateKey, el, e)"
+                  @change="(e: Event) => handleGameStateInput(key as GameStateKey, el, e)"
                 />
               </template>
               <template v-else-if="['crisisBreakpoints'].indexOf(el) !== -1">
@@ -205,16 +234,16 @@
                   type="array"
                   class="border border-emerald-600 rounded-md px-2 max-w-40"
                   min="0"
-                  @input="((e: Event) => gameState[key][el] = e.target.value.split(','))"
-                  @change="((e: Event) => gameState[key][el] = e.target.value.split(','))"
+                  @input="(e: Event) => handleArrayInput(key as GameStateKey, el, e)"
+                  @change="(e: Event) => handleArrayInput(key as GameStateKey, el, e)"
                 />
               </template>
               <template v-else-if="['gameSpeed'].indexOf(el) !== -1">
                 <select
                   :value="gameState[key][el]"
                   class="border border-emerald-600 rounded-md px-2 max-w-40"
-                  @input="((e: Event) => gameState[key][el] = e.target.value.split(',').map((el, i) => i===1 ? Number(el) : el))"
-                  @change="((e: Event) => gameState[key][el] = e.target.value.split(',').map((el, i) => i===1 ? Number(el) : el))"
+                  @input="(e: Event) => handleGameSpeedInput(key as GameStateKey, el, e)"
+                  @change="(e: Event) => handleGameSpeedInput(key as GameStateKey, el, e)"
                 >
                   <option>marathon,2</option>
                   <option>long,5</option>
