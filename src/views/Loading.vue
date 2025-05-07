@@ -35,7 +35,7 @@
           ref="hg-outer"
           class="
           w-[3vw] h-[4vw] 
-          bg-amber-600 
+          bg-civ-brand 
           hourglass-clip
         "
         >
@@ -50,12 +50,12 @@
         >
           <div 
             ref="hg-sand"
-            class="w-full h-[2vw] bg-white animate-sand-fall"
+            class="w-full h-[2vw] bg-amber-100 animate-sand-fall"
           ></div>
         </div>
       </div>
-      <div class="w-full bg-amber-700 h-[1%] self-end"></div>
-      <div class="w-[2%] bg-amber-500 h-[1%] self-end animate-loading-width"></div>
+      <div class="w-full bg-civ-brand h-[1%] self-end"></div>
+      <div class="w-[2%] bg-civ-gold h-[1%] self-end animate-loading-width"></div>
     </section>
   </section>
   <Example :path="img">
