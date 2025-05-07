@@ -12,12 +12,19 @@
   import imgAgeFlourish from '@/assets/examples/Civ-7/elements/Age_Flourish.png';
 
   type AgeType = 'Antiquity' | 'Exploration' | 'Modern';
+  type GameSpeedType = ['marathon', 2] |['long', 5] | ['average', 10] | ['short', 25] | ['quick', 50];
+
+  interface IGameSpeed {
+    name: string;
+    turnDuration: number;
+  }
 
   interface IAge {
     name: AgeType;
     turnNumber: number;
     progress: number;
     crisisBreakpoints: number[];
+    gameSpeed: GameSpeedType;
   }
 
   interface IGameState {
@@ -39,8 +46,7 @@
     banner?: string;
   }
 
-  const AGE_PER_TURN = 15;
-  const currentAge = computed(() => 4000 - (gameState.value.age.turnNumber * AGE_PER_TURN));
+  const currentAge = computed(() => 4000 - (gameState.value.age.turnNumber * gameState.value.age.gameSpeed[1]));
 
   const gameState = ref<IGameState>({
     age: {
@@ -51,6 +57,10 @@
         60,
         80,
         90
+      ],
+      gameSpeed: [
+        'marathon',
+        2
       ]
     },
     culture: {
@@ -198,6 +208,20 @@
                   @input="((e: Event) => gameState[key][el] = e.target.value.split(','))"
                   @change="((e: Event) => gameState[key][el] = e.target.value.split(','))"
                 />
+              </template>
+              <template v-else-if="['gameSpeed'].indexOf(el) !== -1">
+                <select
+                  :value="gameState[key][el]"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  @input="((e: Event) => gameState[key][el] = e.target.value.split(',').map((el, i) => i===1 ? Number(el) : el))"
+                  @change="((e: Event) => gameState[key][el] = e.target.value.split(',').map((el, i) => i===1 ? Number(el) : el))"
+                >
+                  <option>marathon,2</option>
+                  <option>long,5</option>
+                  <option>average,15</option>
+                  <option>short,25</option>
+                  <option>quick,50</option>
+                </select>
               </template>
               <template v-else>
                 <input
