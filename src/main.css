@@ -60,7 +60,18 @@ header, footer, main, section, article {
   animation-play-state: running;
 }
 
-
+.dynamic-font-size-0\.5 {
+  --font-size-dynamic: 0.5vw;
+  font-size: var(--font-size-dynamic);
+}
+.dynamic-font-size-0\.75 {
+  --font-size-dynamic: 0.75vw;
+  font-size: var(--font-size-dynamic);
+}
+.dynamic-font-size-0\.875 {
+  --font-size-dynamic: 0.875vw;
+  font-size: var(--font-size-dynamic);
+}
 .dynamic-font-size {
   --font-size-dynamic: 1vw;
   font-size: var(--font-size-dynamic);
@@ -75,4 +86,6 @@ header, footer, main, section, article {
   font-size: var(--font-size-dynamic);
 }
 
-
+details > summary {
+  @apply cursor-pointer;
+}

@@ -67,8 +67,4 @@
     color: var(--colour-civ-text);
   }
 
-  .dynamic-font-size {
-    font-size: 1vw;
-  }
-
 </style>

@@ -8,8 +8,12 @@
   import CityCapacity from '@/components/CityCapacity.vue';
   import IconButton from '@/components/IconButton.vue';
   import ActionIcon from '@/components/ActionIcon.vue';
+  import AgeIconButton from '@/components/AgeIconButton.vue';
 
-  import imgAgeFlourish from '@/assets/examples/Civ-7/elements/Age_Flourish.png';
+  import imgIcon2K from '@/assets/examples/Civ-7/elements/Icon_2k.png';
+  import imgBook from '@/assets/examples/Civ-7/elements/Icon_Book.png';
+  import imgMenu from '@/assets/examples/Civ-7/elements/Icon_Menu.png';
+import SwitchToggle from '@/components/SwitchToggle.vue';
 
   type AgeType = 'Antiquity' | 'Exploration' | 'Modern';
   type GameSpeedType = ['marathon', 2] |['long', 5] | ['average', 10] | ['short', 25] | ['quick', 50];
@@ -42,6 +46,18 @@
   }
 
   const currentAge = computed(() => 4000 - (gameState.value.age.turnNumber * gameState.value.age.gameSpeed[1]));
+
+  interface IAccountState {
+    '2k': {
+      connected: boolean;
+    }
+  }
+
+  const accountState = ref<IAccountState>({
+    '2k': {
+      connected: false,
+    }
+  })
 
   const gameState = ref<IGameState>({
     age: {
@@ -142,6 +158,45 @@
 </script>
 
 <template>
+  <section
+    id="AccountState"
+    class="w-[80vw] bg-slate-800 mx-auto rounded-md p-4 flex flex-col"
+  >
+    <details>
+      <summary class="text-xl font-semibold">
+        Account-State:
+      </summary>
+
+    
+      <template
+        v-for="key,gs_index in Object.keys(accountState)"
+        :key="`account-state_${gs_index}`"
+      >
+        <details>
+          <summary class="text-lg font-semibold capitalize">
+            {{ key }}
+          </summary>
+          <template
+            v-for="el,ge_key_index in Object.keys(accountState[key])"
+            :key="`game-state_${gs_index}_${ge_key_index}`"
+          >
+            <label class="mx-auto grid grid-cols-2 gap-10 mb-2 items-center"><span class="text-right">{{ el }}</span>
+              <template v-if="['connected'].indexOf(el) !== -1">
+                <SwitchToggle v-model="accountState[key][el]">
+                </switchtoggle></template>
+              <template v-else>
+                <input
+                  v-model="accountState[key][el]"
+                  type="string"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                />
+              </template>
+            </label>
+          </template>
+        </details>
+      </template>
+    </details>
+  </section>
   <section
     id="GameState"
     class="w-[80vw] bg-slate-800 mx-auto rounded-md p-4 flex flex-col"
@@ -269,29 +324,55 @@
     id="ConstrainedCanvas"
     class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw]"
   >
-    <section>
-      <!-- Top Banner -->
-      <div
-        class="
-          w-full 
+    <!-- Top Banner -->
+    <section
+      class="
           self-start px-2
           flex justify-between
           bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900
+          w-full
         "
-      >
-        <div>
-          <IngameCurrency :displayables="gameState.currency">
-            <CityCapacity
-              :current="3"
-              :max="5"
-            />
-          </IngameCurrency>
-        </div>
-        <div class="dynamic-font-size flex gap-2 text-slate-400">
+    >
+      <IngameCurrency :displayables="gameState.currency">
+        <CityCapacity
+          :current="3"
+          :max="5"
+        />
+      </IngameCurrency>
+      <article class="flex gap-2 whitespace-nowrap place-content-end w-full items-center">
+        <div class="dynamic-font-size-0.875 flex gap-[2vw] text-slate-400 w-fit">
           <span>Turn: {{ gameState.age.turnNumber }} | {{ currentAge }} BCE</span>
           <span class="uppercase">{{ (new Date(Date.now())).toLocaleString("en-AU", {timeStyle: "short"}) }}</span>
         </div>
-      </div>
+        <div class="inline-flex items-center gap-2">
+          <div class="grid-area-stack size-[1vw]">
+            <img
+              :src="imgIcon2K"
+              alt=""
+              role="presentation"
+              class="aspect-square "
+            />
+            <div
+              class="bg-red-600 rounded-full size-2/5 ml-auto translate-x-[0.1vw] -translate-y-[0.1vw]"
+              :class="[
+                { '!bg-emerald-300' : accountState['2k'].connected },
+              ]"
+            ></div>
+          </div>
+          <img
+            :src="imgBook"
+            alt=""
+            role="presentation"
+            class="size-[1vw]"
+          />
+          <img
+            :src="imgMenu"
+            alt=""
+            role="presentation"
+            class="size-[1vw]"
+          />
+        </div>
+      </article>
     </section>
 
     <!-- Inner UI  -->
@@ -303,57 +384,16 @@
         alt=""
       />
       <div class="ml-[2vw] mt-[1vw] flex gap-[0.5vw] items-center h-fit">
-        <IconButton
-          size="lg"
-          :banner="`${gameState.age.progress}%`"
-          class="
-            relative
-            
-            before:absolute 
-            before:bg-stone-900 before:size-[4.55vw] 
-            before:-left-[0.25vw] before:-top-[0.3vw]
-            before:rounded-full
-          "
+        <AgeIconButton
+          :progress="gameState.age.progress"
+          :crises="gameState.age.crisisBreakpoints"
         >
-          <img
-            :src="imgAgeFlourish"
-            alt=""
-            role="presentation"
-            class="absolute left-[-1.5vw] size-[120%] -translate-y-1/2 top-1/2"
-          />
-          <template
-            v-for="(crisis, index) in gameState.age.crisisBreakpoints"
-            :key="`crisis_${index}`"
-          >
-            <div
-              class="absolute size-[95%] bottom-[0.1vw] origin-center rotate-[var(--rotation-percentage)]"
-              :style="`--rotation-percentage: ${crisis*3.6 + 45 + 180}deg;`"
-            >
-              <div
-                :data-percentage="crisis"
-                class="
-                  scale-[75%]
-                  size-[0.5vw]
-                  rounded-full
-                  bg-red-700
-                  blur-[0.025vw]
-                  relative
-                  z-10
-
-                  before:absolute before:size-full before:rounded-full before:z-10
-                  before:border-2 before:p-[0.4vw] before:translate-[-0.25vw] before:border-civ-brand
-
-                  after:absolute after:size-full after:bg-civ-gold after:translate-[0.3vw] after_clip-triangle
-                "
-              ></div>
-            </div>
-          </template>
           <ActionIcon
             type="Age" 
             size="lg"
             :progress="gameState.age.progress"
           />
-        </IconButton>
+        </AgeIconButton>
         <IconButton
           size="md"
           :banner="resolveBanner('science')"
@@ -409,11 +449,3 @@
   </section>
   <Example :path="imgGame" />
 </template>
-
-<style lang="css" scoped>
-
-  .after_clip-triangle::after {
-    clip-path: polygon(90% 0%, 0% 90%, 100% 100%)
-  }
-
-</style>
