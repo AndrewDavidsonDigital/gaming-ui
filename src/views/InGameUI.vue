@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue';  
-  import type { ActionType, ICurrency } from '@/lib/interfaces';
+  import { type ActionType, type ICurrency } from '@/lib/interfaces';
   import Example from '@/components/Example.vue';
   import imgGame from '@/assets/examples/Civ-7/GameUI.png'
   import imgBG from '@/assets/examples/Civ-7/BG.png'
@@ -110,38 +110,107 @@
     id="ConstrainedCanvas"
     class="w-[80vw] bg-slate-800 mx-auto rounded-md p-4 flex flex-col"
   >
-    <h2 class="text-xl font-semibold">
-      Game-State:
-    </h2>
-    <template
-      v-for="key,gs_index in Object.keys(gameState)"
-      :key="`game-state_${gs_index}`"
-    >
-      <h3 class="text-lg font-semibold capitalize mb-2">
-        {{ key }}
-      </h3>
+    <details>
+      <summary class="text-xl font-semibold">
+        Game-State:
+      </summary>
+
+    
       <template
-        v-for="el,ge_key_index in Object.keys(gameState[key])"
-        :key="`game-state_${gs_index}_${ge_key_index}`"
+        v-for="key,gs_index in Object.keys(gameState)"
+        :key="`game-state_${gs_index}`"
       >
-        <label class="mx-auto grid grid-cols-2 gap-10 mb-2"><span class="text-right">{{ el }}</span>
-          <template v-if="['progress','turnNumber', 'currentInvestment', 'totalInvestment'].indexOf(el) !== -1">
-            <input
-              v-model="gameState[key][el]"
-              type="number"
-              class="border border-emerald-600 rounded-md px-2"
-            />
+        <details>
+          <summary class="text-lg font-semibold capitalize">
+            {{ key }}
+          </summary>
+          <template v-if="key === 'bannerNotifications'">
+            <template
+              v-for="el,note_key_index in gameState[key]"
+              :key="`game-state_notifications_${gs_index}_${note_key_index}`"
+            >
+              <label class="mx-auto grid grid-cols-2 gap-10 mb-2">
+                <span class="text-right">Type: </span>
+                <span>{{ el.type }}</span>
+              </label>
+              <label class="mx-auto grid grid-cols-2 gap-10 mb-2">
+                <span class="text-right">Amount of notes: </span>
+                <input
+                  v-model="el.banner"
+                  type="string"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  min="0"
+                />
+              </label>
+            </template>
           </template>
-          <template v-else>
-            <input
-              v-model="gameState[key][el]"
-              type="string"
-              class="border border-emerald-600 rounded-md px-2"
-            />
+          <template v-else-if="key === 'currency'">
+            <template
+              v-for="el,note_key_index in gameState[key]"
+              :key="`game-state_notifications_${gs_index}_${note_key_index}`"
+            >
+              <label class="mx-auto grid grid-cols-2 gap-10 mb-2">
+                <span class="text-right">Type: </span>
+                <span>{{ el.type }}</span>
+              </label>
+              <label class="mx-auto grid grid-cols-2 gap-10 mb-2">
+                <span class="text-right">Inc: </span>
+                <input
+                  v-model="el.increase"
+                  type="number"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  min="0"
+                />
+              </label>
+              <label
+                v-if="['gold', 'influence'].indexOf(el.type.toLowerCase()) !== -1"
+                class="mx-auto grid grid-cols-2 gap-10 mb-2"
+              ><span class="text-right">Stock: </span>
+                <input
+                  v-model="el.current"
+                  type="number"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  min="0"
+                />
+              </label>
+            </template>
           </template>
-        </label>
+          <template
+            v-for="el,ge_key_index in Object.keys(gameState[key])"
+            v-else
+            :key="`game-state_${gs_index}_${ge_key_index}`"
+          >
+            <label class="mx-auto grid grid-cols-2 gap-10 mb-2"><span class="text-right">{{ el }}</span>
+              <template v-if="['progress','turnNumber', 'currentInvestment', 'totalInvestment'].indexOf(el) !== -1">
+                <input
+                  v-model="gameState[key][el]"
+                  type="number"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  min="0"
+                />
+              </template>
+              <template v-else-if="['crisisBreakpoints'].indexOf(el) !== -1">
+                <input
+                  :value="gameState[key][el].join(',')"
+                  type="array"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  min="0"
+                  @input="((e: Event) => gameState[key][el] = e.target.value.split(','))"
+                  @change="((e: Event) => gameState[key][el] = e.target.value.split(','))"
+                />
+              </template>
+              <template v-else>
+                <input
+                  v-model="gameState[key][el]"
+                  type="string"
+                  class="border border-emerald-600 rounded-md px-2 max-w-40"
+                />
+              </template>
+            </label>
+          </template>
+        </details>
       </template>
-    </template>
+    </details>
   </section>
   <section
     id="ConstrainedCanvas"
@@ -235,6 +304,7 @@
         <IconButton
           size="md"
           :banner="resolveBanner('science')"
+          :title="gameState.science.name"
         >
           <ActionIcon
             type="Science" 
@@ -245,6 +315,7 @@
         <IconButton
           size="md"
           :banner="resolveBanner('culture')"
+          :title="gameState.culture.name"
         >
           <ActionIcon
             type="Culture" 
@@ -261,6 +332,7 @@
             :banner="note.banner"
             cascade
             secondary-border
+            :title="note.type"
           >
             <ActionIcon
               :type="note.type"
