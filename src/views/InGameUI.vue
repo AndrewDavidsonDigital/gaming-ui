@@ -1,22 +1,24 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue';  
-  import { type ActionType, type ICurrency } from '@/lib/interfaces';
+  import { type ActionType, type DiplomacyStateType, type IColouration, type ICurrency } from '@/lib/interfaces';
   import Example from '@/components/Example.vue';
-  import imgGame from '@/assets/examples/Civ-7/GameUI.png'
-  import imgBG from '@/assets/examples/Civ-7/BG.png'
   import IngameCurrency from '@/components/IngameCurrency.vue';
   import CityCapacity from '@/components/CityCapacity.vue';
   import IconButton from '@/components/IconButton.vue';
   import ActionIcon from '@/components/ActionIcon.vue';
   import AgeIconButton from '@/components/AgeIconButton.vue';
+  import SwitchToggle from '@/components/SwitchToggle.vue';
+  import CharacterBanner from '@/components/CharacterBanner.vue';
 
+  import imgGame from '@/assets/examples/Civ-7/GameUI.png'
+  import imgBG from '@/assets/examples/Civ-7/BG.png'
   import imgIcon2K from '@/assets/examples/Civ-7/elements/Icon_2k.png';
   import imgBook from '@/assets/examples/Civ-7/elements/Icon_Book.png';
   import imgMenu from '@/assets/examples/Civ-7/elements/Icon_Menu.png';
-import SwitchToggle from '@/components/SwitchToggle.vue';
 
   type AgeType = 'Antiquity' | 'Exploration' | 'Modern';
   type GameSpeedType = ['marathon', 2] |['long', 5] | ['average', 10] | ['short', 25] | ['quick', 50];
+  type GameStateKey = keyof typeof gameState.value;
 
   interface IAge {
     name: AgeType;
@@ -32,6 +34,8 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
     culture: IResearch;
     currency: ICurrency[];
     bannerNotifications: INoteConfig[];
+    opponents: IOpponent[];
+    player: IPlayer;
   }
 
   interface IResearch {
@@ -40,12 +44,28 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
     totalInvestment: number;
   }
 
+  interface ICiv {
+    ruler: string;
+    civilization: string;
+    colours: IColouration;
+  }
+
+  interface IPlayer extends ICiv {
+    tbd?: string;
+  }
+
+  interface IOpponent extends ICiv {
+    isKnown: boolean;
+    relationship: DiplomacyStateType;
+  }
+
   interface INoteConfig {
     type: ActionType;
     banner?: string;
   }
 
   const currentAge = computed(() => 4000 - (gameState.value.age.turnNumber * gameState.value.age.gameSpeed[1]));
+  const knownOpponents = computed(() => gameState.value.opponents.filter(el => el.isKnown));
 
   interface IAccountState {
     '2k': {
@@ -115,7 +135,47 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
       { type: 'Diplomacy' },
       { type: 'Lock' },
       { type: 'World' }
-    ]
+    ],
+    opponents: [
+      {
+        ruler: 'Ceaser',
+        civilization: 'Rome',
+        isKnown: true,
+        relationship: 'Friendly',
+        colours: {
+          main: 'Orange',
+          alpha: 0.6
+        }
+      },
+      {
+        ruler: 'Confucius',
+        civilization: 'China',
+        isKnown: false,
+        relationship: 'Neutral',
+        colours: {
+          main: 'Cyan',
+          alpha: 0.6
+        }
+      },
+      {
+        ruler: 'Quetzalcoatl',
+        civilization: 'Maya',
+        isKnown: true,
+        relationship: 'Antagonistic',
+        colours: {
+          main: 'Green',
+          alpha: 0.6
+        }
+      }
+    ],
+    player: {
+      civilization: 'Atlantas',
+      ruler: 'Benjamin Franklin',
+      colours: {
+        main: 'Red',
+        alpha: 0.6
+      }
+    }
   });
 
   function resolveBanner(type: 'science' | 'culture'){
@@ -124,8 +184,6 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
 
     return `${Math.ceil(researchRemaining/rate)}`;
   }
-
-  type GameStateKey = keyof typeof gameState.value;
 
   function handleGameStateInput(key: GameStateKey, el: string, e: Event) {
     const target = e.target as HTMLInputElement;
@@ -383,7 +441,7 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
         role="presentation"
         alt=""
       />
-      <div class="ml-[2vw] mt-[1vw] flex gap-[0.5vw] items-center h-fit">
+      <div class="ml-[2vw] mt-[1vw] flex gap-[0.5vw] items-center h-fit w-fit">
         <AgeIconButton
           :progress="gameState.age.progress"
           :crises="gameState.age.crisisBreakpoints"
@@ -434,8 +492,26 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
           </IconButton>
         </template>
       </div>
-      <div class="ml-auto">
-        Top Right
+      <div
+        class="ml-auto mt-[1vw] mr-[5vw] gap-[1vw] h-fit grid grid-cols-n"
+        :style="`--column-count: ${1 + knownOpponents.length};`"
+      >
+        <CharacterBanner
+          :ruler="gameState.player.ruler"
+          :civ="gameState.player.civilization"
+          :colour="gameState.player.colours"
+        />
+        <template
+          v-for="(opponent, index) in knownOpponents"
+          :key="`opponent_${index}`"
+        >
+          <CharacterBanner
+            :ruler="opponent.ruler"
+            :civ="opponent.civilization"
+            :relationship="opponent.relationship"
+            :colour="opponent.colours"
+          />
+        </template>
       </div>
       <div class="mt-auto bg-neutral-900 aspect-video w-[15vw] ml-2 mb-2 border border-amber-700">
         <div class="mx-auto -mt-3 size-4 border border-slate-500 rounded-full text-xs text-white text-center bg-slate-700">
@@ -449,3 +525,13 @@ import SwitchToggle from '@/components/SwitchToggle.vue';
   </section>
   <Example :path="imgGame" />
 </template>
+
+<style lang="css" scoped>
+  * {
+    --column-count: 1;
+  }
+
+  .grid-cols-n {
+    grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
+  }
+</style>

@@ -19,7 +19,7 @@ watch(isMenuOpen, (newVal) => {
 </script>
 
 <template>
-  <header class="h-fit  bg-slate-900">
+  <header class="h-fit  bg-slate-900 sticky top-0 z-nav">
     <nav class="flex gap-x-4 justify-center">
       <template
         v-for="(value, _index) in routes"

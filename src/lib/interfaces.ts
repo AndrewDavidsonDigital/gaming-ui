@@ -1,9 +1,17 @@
 export type CurrencyType = 'Gold' | 'Science' | 'Culture' | 'Happiness' | 'Influence';
 export type ActionType = 'Notes' | 'Nature' | 'Urn' | 'Diplomacy' | 'Lock' | 'World' | 'Culture' | 'Science' | 'Age';
 export type SizeType = 'sm' | 'md' | 'lg';
+export type DiplomacyStateType = 'War' | 'Antagonistic' | 'Neutral' | 'Friendly' | 'Allied' ;
+export type ColourType = 'Red' | 'Yellow' | 'Green' | 'Cyan' | 'Orange' ;
 
 export interface ICurrency {
   type: CurrencyType;
   increase: number;
   current?: number;
+}
+
+export interface IColouration {
+  main: ColourType;
+  alpha: number;
+  border?: ColourType;
 }
