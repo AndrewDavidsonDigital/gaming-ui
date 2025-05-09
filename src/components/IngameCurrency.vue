@@ -39,7 +39,7 @@
       :key="`currency__${index}`"
     >
       <div 
-        class="inline-flex w-fit text-nowrap restyled-text dynamic-font-size"
+        class="inline-flex w-fit text-nowrap restyled-text text-base"
         :style="`--colour-civ-text: var(${DISPLAY_CONFIG.get(displayable.type)?.colour})`"
       >
         <CurrencyIcon

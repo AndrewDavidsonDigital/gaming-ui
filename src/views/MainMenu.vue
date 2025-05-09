@@ -46,7 +46,7 @@ const menuCollection = ref<string[][]>([
     id="ConstrainedCanvas"
     class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw] civilization-font-equiv"
   >
-    <section class="grid-area-stack size-full overflow-clip dynamic-font-size">
+    <section class="grid-area-stack size-full overflow-clip text-base">
       <img
         class="w-full aspect-video"
         :src="imgBg" 
@@ -328,18 +328,6 @@ const menuCollection = ref<string[][]>([
   }
   .mask-x-both-short {
     mask-image: linear-gradient(to right, transparent 0, black 25%, black 75%, transparent 100%);
-  }
-
-  .dynamic-font-size {
-    button {
-      font-size: 1vw;
-    }
-    h2 {
-      font-size: 2vw;
-    }
-    h4 {
-      font-size: 0.5vw;
-    }
   }
 
   .before_rays-clip-path:before {

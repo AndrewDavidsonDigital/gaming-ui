@@ -41,7 +41,7 @@
     </article>
     <div
       v-if="props.banner"
-      class="mx-auto w-fit bg-slate-900/80 h-fit  pt-2 px-1 -my-2 z-0 text-slate-400 clipped min-w-[3ch] text-center dynamic-font-size"
+      class="mx-auto w-fit bg-slate-900/80 h-fit  pt-2 px-1 -my-2 z-0 text-slate-400 clipped min-w-[3ch] text-center text-base"
       :class="[
         { 'translate-y-[4vw]' : props.size === 'lg' },
         { 'translate-y-[3.5vw]' : props.size === 'md' },

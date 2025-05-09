@@ -10,7 +10,7 @@
   interface IProps {
     ruler: string;
     civ: string;
-    relationship: DiplomacyStateType;
+    relationship?: DiplomacyStateType;
     colour: IColouration;
   }
 
@@ -19,9 +19,9 @@
 </script>
 
 <template>
-  <section class="w-[2.75vw] grid grid-rows-1">
+  <section class="w-11 grid grid-rows-1">
     <!--  hex  -->
-    <article class="aspect-square w-[2.75vw] grid-area-stack">
+    <article class="aspect-square w-11 grid-area-stack">
       <div 
         class="
         hexagon 
@@ -43,12 +43,12 @@
     </article>
 
     <!-- banner -->
-    <article class="grid-area-stack h-[5vw] w-[2.25vw] translate-y-[-1vw] mx-auto">
+    <article class="grid-area-stack h-20 w-9 -translate-y-4 mx-auto">
       <div
         class="
           bg-gradient-to-b from-red-900 via-85% via-red-950 to-red-950 
           flex flex-col justify-end 
-          pb-[1vw]
+          pb-4
           mx-[1px]
           triangle-bottom
           z-10
@@ -56,7 +56,7 @@
       >
         <img
           :src="imgCiv"
-          class="max-w-[1.5vw] mx-auto pb-[0.25vw]"
+          class="max-w-6 mx-auto pb-1"
           role="presentation"
           :alt="`Civilization logo for ${props.civ}`"
         />
@@ -66,7 +66,7 @@
           bg-gradient-to-b via-70% to-90%
           from-transparent via-civ-brand to-transparent 
           w-full
-          translate-y-[-0.2vw]
+          -translate-y-1
           triangle-bottom
         "
       ></div>

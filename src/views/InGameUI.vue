@@ -380,7 +380,7 @@
   </section>
   <section
     id="ConstrainedCanvas"
-    class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw]"
+    class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-8"
   >
     <!-- Top Banner -->
     <section
@@ -398,12 +398,12 @@
         />
       </IngameCurrency>
       <article class="flex gap-2 whitespace-nowrap place-content-end w-full items-center">
-        <div class="dynamic-font-size-0.875 flex gap-[2vw] text-slate-400 w-fit">
+        <div class="text-sm flex gap-[2vw] text-slate-400 w-fit">
           <span>Turn: {{ gameState.age.turnNumber }} | {{ currentAge }} BCE</span>
           <span class="uppercase">{{ (new Date(Date.now())).toLocaleString("en-AU", {timeStyle: "short"}) }}</span>
         </div>
         <div class="inline-flex items-center gap-2">
-          <div class="grid-area-stack size-[1vw]">
+          <div class="grid-area-stack size-4">
             <img
               :src="imgIcon2K"
               alt=""
@@ -421,13 +421,13 @@
             :src="imgBook"
             alt=""
             role="presentation"
-            class="size-[1vw]"
+            class="size-4"
           />
           <img
             :src="imgMenu"
             alt=""
             role="presentation"
-            class="size-[1vw]"
+            class="size-4"
           />
         </div>
       </article>
@@ -441,10 +441,11 @@
         role="presentation"
         alt=""
       />
-      <div class="ml-[2vw] mt-[1vw] flex gap-[0.5vw] items-center h-fit w-fit">
+      <div class="ml-8 mt-4 flex gap-2 items-center h-fit w-fit">
         <AgeIconButton
           :progress="gameState.age.progress"
           :crises="gameState.age.crisisBreakpoints"
+          class="mr-1.5"
         >
           <ActionIcon
             type="Age" 
@@ -456,6 +457,7 @@
           size="md"
           :banner="resolveBanner('science')"
           :title="gameState.science.name"
+          class="mr-1.5"
         >
           <ActionIcon
             type="Science" 
@@ -467,6 +469,7 @@
           size="md"
           :banner="resolveBanner('culture')"
           :title="gameState.culture.name"
+          class="mr-1.5"
         >
           <ActionIcon
             type="Culture" 
@@ -484,6 +487,7 @@
             cascade
             secondary-border
             :title="note.type"
+            class="self-start mt-1"
           >
             <ActionIcon
               :type="note.type"
@@ -493,7 +497,7 @@
         </template>
       </div>
       <div
-        class="ml-auto mt-[1vw] mr-[5vw] gap-[1vw] h-fit grid grid-cols-n"
+        class="ml-auto mt-4 mr-20 gap-4 h-fit grid grid-cols-n"
         :style="`--column-count: ${1 + knownOpponents.length};`"
       >
         <CharacterBanner

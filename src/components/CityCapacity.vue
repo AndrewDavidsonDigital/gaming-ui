@@ -14,7 +14,7 @@
 
 <template>
   <div
-    class="flex gap-2 text-slate-400 dynamic-font-size"
+    class="flex gap-2 text-slate-400 text-base"
     :class="[{'!text-red-500/60' : props.current > props.max }]"
   >
     <img
@@ -26,9 +26,3 @@
     {{ props.current }}/{{ props.max }}
   </div>
 </template>
-
-<style lang="css" scoped>
-  .dynamic-font-size {
-    font-size: 1vw;
-  }
-</style>
