@@ -68,3 +68,13 @@ details > summary {
 .z-nav{
   z-index: 10000;
 }
+
+
+select {
+  @apply border rounded-sm;
+
+  option {
+    @apply bg-slate-700;
+    @apply border rounded-none;
+  }
+}

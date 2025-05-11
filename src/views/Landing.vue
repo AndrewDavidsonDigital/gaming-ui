@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import Example from '@/components/Example.vue';
+  // import { ref } from 'vue';
+  // import type { GameType } from '@/lib/interfaces';
+  import Example from '@/components/Example.vue';
 
-import imgMainMenu from '@/assets/examples/Civ-7/Main Menu.png'
-import imgLoading from '@/assets/examples/Civ-7/Loading.png'
-import imgGame from '@/assets/examples/Civ-7/GameUI.png'
+  import imgCiv7MainMenu from '@/assets/examples/Civ-7/MainMenu.png'
+  import imgCiv7Loading from '@/assets/examples/Civ-7/Loading.png'
+  import imgCiv7Game from '@/assets/examples/Civ-7/GameUI.png'
+
+  import imgStellarisMainMenu from '@/assets/examples/Stellaris/MainMenu.png'
+  import imgStellarisLoading from '@/assets/examples/Stellaris/Loading.png'
+  import imgStellarisGame from '@/assets/examples/Stellaris/GameUI.png'
+  import { useGame } from '@/stores/game';
+import GameSwitcher from '@/components/GameSwitcher.vue';
+
+
+
+
+  const gameStore = useGame();
 
 </script>
 
@@ -12,10 +25,47 @@ import imgGame from '@/assets/examples/Civ-7/GameUI.png'
     id="ConstrainedCanvas"
     class="w-[80vw] aspect-video mx-auto mt-[2vw]"
   >
-    <p>so, 2days into this project i realized i really should have just set the root-font to be a `viewport-width` value, since this a forced 16:9 aspect project with needing for dynamic scaling of most elements with relation to. . . well `viewport-width`</p>
-    <p>this realization came too late though and I have no plans to refactor everything to viewports rem perspective, so we will continue to build with abstract declarations `w-[3vw]`</p>
-    <Example :path="imgMainMenu" />
-    <Example :path="imgLoading" />
-    <Example :path="imgGame" />
+    <TransitionGroup>
+      <template v-if="gameStore.game === 'Civ-7'">
+        <Example
+          :path="imgCiv7MainMenu"
+          inline
+        >
+          : Civilization 7 Main Menu
+        </Example>
+        <Example
+          :path="imgCiv7Loading" 
+          inline
+        >
+          : Civilization 7 Loading Screen
+        </Example>
+        <Example
+          :path="imgCiv7Game" 
+          inline
+        >
+          : Civilization 7 Game UI
+        </Example>
+      </template>
+      <template v-else-if="gameStore.game === 'Stellaris'">
+        <Example
+          :path="imgStellarisMainMenu" 
+          inline
+        >
+          : Stellaris Main Menu
+        </Example>
+        <Example
+          :path="imgStellarisLoading" 
+          inline
+        >
+          : Stellaris Loading
+        </Example>
+        <Example
+          :path="imgStellarisGame" 
+          inline
+        >
+          : Stellaris Game UI
+        </Example>
+      </template>
+    </TransitionGroup>
   </section>
 </template>
