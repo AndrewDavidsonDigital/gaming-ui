@@ -193,7 +193,9 @@
         }
       ]
     ]
-  })
+  });
+
+  const lockLeftBar = ref<boolean>(false);
 
   function handleSpeedChange(increment: 0 | 1 | -1){
     const currentSpeedIndex = orderedSpeedType.findIndex(el => el[0] === gameState.value.speed[0]);
@@ -273,7 +275,96 @@
         role="presentation"
         alt=""
       />
-      <!-- Top Banner -->
+      <!-- hexagon -->
+      <article class="aspect-square w-11 grid-area-stack">
+        <div
+          class="
+            bg-clip-hexagon 
+            bg-emerald-900
+            relative
+            z-10
+
+            before:absolute before_bg-clip-hexagon
+            before:size-[90%] before:bg-black/50 before:-z-10 before:translate-[5%]
+          "
+        >
+          <img
+            :src="imgPlayer"
+            class="p-0.5"
+            role="presentation"
+            alt=""
+          />
+        </div>
+      </article>
+      <!-- Left Side Menu -->
+      <div
+        class="
+          grid-area-stack-inner
+          mr-auto mb-auto
+          mt-[1.625rem]
+          pr-[1px] pb-[1px]
+          bg-emerald-800
+          bg-clip-rhombus
+
+          w-6
+          transition-all duration-300
+
+          hover:w-[7rem]
+          group
+          overflow-clip
+        "
+        :class="[
+          { 'w-[7rem]' : lockLeftBar }
+        ]"
+      >
+        <div 
+          class="
+            mr-auto mb-auto
+            flex flex-col gap-y-2 
+            pt-7 pb-1
+            from-neutral-950/50 to-neutral-900
+            bg-gradient-to-b
+            bg-clip-rhombus
+          
+            w-[calc(1.5rem_-_1px)]
+            transition-all duration-300
+
+            group-hover:w-[calc(7rem_-_1px)]
+          "
+          :class="[
+            { 'w-[calc(7rem_-_1px)]' : lockLeftBar }
+          ]"
+        >
+          <template
+            v-for="controlImg, index in leftControlsCollection"
+            :key="`left_control_${index}`"
+          >
+            <div class="flex gap-5 pl-[2px]">
+              <img
+                :src="controlImg"
+                class="size-[0.75rem] m-0.5"
+                alt=""
+                role="presentation"
+              />
+              <h2 class="text-xs text-slate-300/70">
+                foooood
+              </h2>
+            </div>
+          </template>
+          <button
+            class="pl-[2px]"
+            @click="lockLeftBar = !lockLeftBar"
+          >
+            <img
+              :src="imgLeftLock"
+              class="size-2 m-0.5 mr-2 mb-2"
+              alt=""
+              role="presentation"
+            />
+          </button>
+        </div>
+      </div>
+      <!-- Top Menu -->
       <section
         class="
           self-start
@@ -362,65 +453,6 @@
           </article>
         </div>
       </section>
-      <article class="aspect-square w-11 grid-area-stack">
-        <div
-          class="
-            bg-clip-hexagon 
-            bg-emerald-900
-            relative
-            z-10
-
-            before:absolute before_bg-clip-hexagon
-            before:size-[90%] before:bg-black/50 before:-z-10 before:translate-[5%]
-          "
-        >
-          <img
-            :src="imgPlayer"
-            class="p-0.5"
-            role="presentation"
-            alt=""
-          />
-        </div>
-      </article>
-      <div
-        class="
-          grid-area-stack-inner
-          mr-auto mb-auto
-          mt-[2rem]
-          pr-[1px] pb-[1px]
-          bg-emerald-800
-          bg-clip-rhombus
-        "
-      >
-        <div 
-          class="
-            mr-auto mb-auto
-            flex flex-col gap-y-2 
-            pt-3 pb-1
-            from-neutral-950/50 to-neutral-900
-            bg-gradient-to-b
-            bg-clip-rhombus
-          "
-        >
-          <template
-            v-for="controlImg, index in leftControlsCollection"
-            :key="`left_control_${index}`"
-          >
-            <img
-              :src="controlImg"
-              class="size-[0.75rem] m-0.5"
-              alt=""
-              role="presentation"
-            />
-          </template>
-          <img
-            :src="imgLeftLock"
-            class="size-2 m-0.5 mr-2 mb-2"
-            alt=""
-            role="presentation"
-          />
-        </div>
-      </div>
       <div class="mr-auto mt-auto">
         Bottom left
       </div>
@@ -438,7 +470,7 @@
 <style lang="css" scoped>
   * {
     --column-count: 1;
-    --rhombus-cut: 0.75rem;
+    --rhombus-cut: 1.25rem;
     --clip-path-rhombus: polygon(
       100% 0,
       100% calc(100% - var(--rhombus-cut)),
