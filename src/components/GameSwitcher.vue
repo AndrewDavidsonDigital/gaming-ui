@@ -8,6 +8,8 @@
   <select
     v-model="gameStore.game"
     aria-label="Same Selector"
+
+    class="border-none"
   >
     <option value="Civ-7">
       Civilization 7

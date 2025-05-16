@@ -3,7 +3,10 @@
   import { useRoute } from 'vue-router'
   import { computed } from 'vue';
   import { routes } from '@/router'
-import GameSwitcher from './GameSwitcher.vue';
+  import GameSwitcher from './GameSwitcher.vue';
+  import { useGame } from '@/stores/game';
+
+  const gameStore = useGame();
 
   const currentRoute = useRoute();
 
@@ -17,34 +20,42 @@ import GameSwitcher from './GameSwitcher.vue';
     <nav class="flex gap-x-4 justify-center">
       <GameSwitcher />
       <template
-        v-for="(value, _index) in routesStellaris"
-        :key="'routerKey_' + _index"
+        v-if="gameStore.game === 'Stellaris'"
       >
-        <RouterLink
-          :to="value.path"
-          class="truncate duration-500 hover:text-orange-400"
-          :class="[
-            { 'pointer-events-none cursor-default truncate !text-cyan-500' : value.path === currentRoute.path},
-          ]"
-          :title="value.title"
+        <template
+          v-for="(value, _index) in routesStellaris"
+          :key="'routerKey_' + _index"
         >
-          {{ value.title }}
-        </RouterLink>
+          <RouterLink
+            :to="value.path"
+            class="truncate duration-500 hover:text-orange-400"
+            :class="[
+              { 'pointer-events-none cursor-default truncate !text-cyan-500' : value.path === currentRoute.path},
+            ]"
+            :title="value.title"
+          >
+            {{ value.title }}
+          </RouterLink>
+        </template>
       </template>
       <template
-        v-for="(value, _index) in routesCiv"
-        :key="'routerKey_' + _index"
+        v-if="gameStore.game === 'Civ-7'"
       >
-        <RouterLink
-          :to="value.path"
-          class="truncate duration-500 hover:text-orange-400"
-          :class="[
-            { 'pointer-events-none cursor-default truncate !text-cyan-500' : value.path === currentRoute.path},
-          ]"
-          :title="value.title"
+        <template   
+          v-for="(value, _index) in routesCiv"
+          :key="'routerKey_' + _index"
         >
-          {{ value.title }}
-        </RouterLink>
+          <RouterLink
+            :to="value.path"
+            class="truncate duration-500 hover:text-orange-400"
+            :class="[
+              { 'pointer-events-none cursor-default truncate !text-cyan-500' : value.path === currentRoute.path},
+            ]"
+            :title="value.title"
+          >
+            {{ value.title }}
+          </RouterLink>
+        </template>
       </template>
     </nav>
   </header>
