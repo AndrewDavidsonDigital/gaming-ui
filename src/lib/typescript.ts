@@ -42,7 +42,8 @@ type OnlyFirst<T, X> = T & {[Key in keyof Omit<X, keyof T>]?: never};
  * @param Result placeholder var for recursive calling as well as the var for storing our result.
  * @author Typed Rocks <pre>https://www.youtube.com/@Typed-Rocks</pre>
  */
-type MergeTypes<TypesArray extends any[], Result = {}> =
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type MergeTypes<TypesArray extends unknown[], Result = {}> =
     TypesArray extends [infer Head, ...infer Remainder]
         ? MergeTypes<Remainder, Result & Head>
         : Result;
@@ -58,7 +59,7 @@ type MergeTypes<TypesArray extends any[], Result = {}> =
  * @author Typed Rocks <pre>https://www.youtube.com/@Typed-Rocks</pre>
  */
 type OneOf<
-    TypesArray extends any[], 
+    TypesArray extends unknown[], 
     Result = never, 
     AllProperties = MergeTypes<TypesArray>
 > = 
@@ -68,6 +69,7 @@ type OneOf<
 
 
 // bellow is bugged as its a merged type with part from type a and others from type b
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const overflowedAsset : MediaAsset_Union = {
     id: '1',
     description: 'test asset',
@@ -75,6 +77,7 @@ const overflowedAsset : MediaAsset_Union = {
     extension: 'jpg',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const singularAsset : MediaAsset = {
     id: '1',
     description: 'test asset',

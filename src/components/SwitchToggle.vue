@@ -5,7 +5,7 @@
   }
   const props = defineProps<IProps>();
 
-  const model = defineModel();
+  const model = defineModel<Boolean>();
 
   function update() {
     model.value = !(model.value);

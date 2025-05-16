@@ -6,7 +6,7 @@
   "scripts": {
     "boot": "yarn install && yarn dev",
     "dev": "vite --host",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "yarn type-check && yarn build-only",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",

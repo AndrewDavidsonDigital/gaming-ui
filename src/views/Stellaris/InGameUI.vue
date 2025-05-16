@@ -234,15 +234,18 @@
           <summary class="text-lg font-semibold capitalize">
             {{ key }}
           </summary>
+          <!-- @vue-ignore -->
           <template
             v-for="el,ge_key_index in Object.keys(accountState[key])"
             :key="`game-state_${gs_index}_${ge_key_index}`"
           >
             <label class="mx-auto grid grid-cols-2 gap-10 mb-2 items-center"><span class="text-right">{{ el }}</span>
               <template v-if="['connected'].indexOf(el) !== -1">
+                <!-- @vue-ignore -->
                 <SwitchToggle v-model="accountState[key][el]">
                 </switchtoggle></template>
               <template v-else>
+                <!-- @vue-ignore -->
                 <input
                   v-model="accountState[key][el]"
                   type="string"
@@ -324,55 +327,61 @@
               </label>
             </template>
           </template>
-          <template
-            v-for="el,ge_key_index in Object.keys(gameState[key])"
-            v-else
-            :key="`game-state_${gs_index}_${ge_key_index}`"
-          >
-            <label class="mx-auto grid grid-cols-2 gap-10 mb-2"><span class="text-right">{{ el }}</span>
-              <template v-if="['progress','turnNumber', 'currentInvestment', 'totalInvestment'].indexOf(el) !== -1">
-                <input
-                  v-model="gameState[key][el]"
-                  type="number"
-                  class="border border-emerald-600 rounded-md px-2 max-w-40"
-                  min="0"
-                  :max="el === 'progress' ? 100 : undefined"
-                  @input="(e: Event) => handleGameStateInput(key as GameStateKey, el, e)"
-                  @change="(e: Event) => handleGameStateInput(key as GameStateKey, el, e)"
-                />
-              </template>
-              <template v-else-if="['crisisBreakpoints'].indexOf(el) !== -1">
-                <input
-                  :value="gameState[key][el].join(',')"
-                  type="array"
-                  class="border border-emerald-600 rounded-md px-2 max-w-40"
-                  min="0"
-                  @input="(e: Event) => handleArrayInput(key as GameStateKey, el, e)"
-                  @change="(e: Event) => handleArrayInput(key as GameStateKey, el, e)"
-                />
-              </template>
-              <template v-else-if="['gameSpeed'].indexOf(el) !== -1">
-                <select
-                  :value="gameState[key][el]"
-                  class="border border-emerald-600 rounded-md px-2 max-w-40"
-                  @input="(e: Event) => handleGameSpeedInput(key as GameStateKey, el, e)"
-                  @change="(e: Event) => handleGameSpeedInput(key as GameStateKey, el, e)"
-                >
-                  <option>marathon,2</option>
-                  <option>long,5</option>
-                  <option>average,15</option>
-                  <option>short,25</option>
-                  <option>quick,50</option>
-                </select>
-              </template>
-              <template v-else>
-                <input
-                  v-model="gameState[key][el]"
-                  type="string"
-                  class="border border-emerald-600 rounded-md px-2 max-w-40"
-                />
-              </template>
-            </label>
+          <template v-else>
+            <!-- @vue-ignore -->
+            <template
+              v-for="el,ge_key_index in Object.keys(gameState[key])"
+              :key="`game-state_${gs_index}_${ge_key_index}`"
+            >
+              <label class="mx-auto grid grid-cols-2 gap-10 mb-2"><span class="text-right">{{ el }}</span>
+                <template v-if="['progress','turnNumber', 'currentInvestment', 'totalInvestment'].indexOf(el) !== -1">
+                  <!-- @vue-ignore -->
+                  <input
+                    v-model="gameState[key][el]"
+                    type="number"
+                    class="border border-emerald-600 rounded-md px-2 max-w-40"
+                    min="0"
+                    :max="el === 'progress' ? 100 : undefined"
+                    @input="(e: Event) => handleGameStateInput(key as GameStateKey, el, e)"
+                    @change="(e: Event) => handleGameStateInput(key as GameStateKey, el, e)"
+                  />
+                </template>
+                <template v-else-if="['crisisBreakpoints'].indexOf(el) !== -1">
+                  <!-- @vue-ignore -->
+                  <input
+                    :value="gameState[key][el].join(',')"
+                    type="array"
+                    class="border border-emerald-600 rounded-md px-2 max-w-40"
+                    min="0"
+                    @input="(e: Event) => handleArrayInput(key as GameStateKey, el, e)"
+                    @change="(e: Event) => handleArrayInput(key as GameStateKey, el, e)"
+                  />
+                </template>
+                <template v-else-if="['gameSpeed'].indexOf(el) !== -1">
+                  <!-- @vue-ignore -->
+                  <select
+                    :value="gameState[key][el]"
+                    class="border border-emerald-600 rounded-md px-2 max-w-40"
+                    @input="(e: Event) => handleGameSpeedInput(key as GameStateKey, el, e)"
+                    @change="(e: Event) => handleGameSpeedInput(key as GameStateKey, el, e)"
+                  >
+                    <option>marathon,2</option>
+                    <option>long,5</option>
+                    <option>average,15</option>
+                    <option>short,25</option>
+                    <option>quick,50</option>
+                  </select>
+                </template>
+                <template v-else>
+                  <!-- @vue-ignore -->
+                  <input
+                    v-model="gameState[key][el]"
+                    type="string"
+                    class="border border-emerald-600 rounded-md px-2 max-w-40"
+                  />
+                </template>
+              </label>
+            </template>
           </template>
         </details>
       </template>
