@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Carrois+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Carrois+Gothic&family=Orbitron:wght@400..900&display=swap');
 @import 'tailwindcss';
 
 :root{
@@ -10,7 +10,19 @@
   font-family: "Carrois Gothic", sans-serif;
   font-weight: 400;
   font-style: normal;
-  letter-spacing: 4px;
+  letter-spacing: 0.25rem;
+}
+
+.stellaris-font-equiv {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  letter-spacing: 0.1rem;
+
+  .uppercase{
+    @apply uppercase;
+    letter-spacing: 1rem;
+  }
 }
 
 
@@ -19,6 +31,11 @@
   --color-civ-brand: oklch(0.6 0.07 66.93);
   --color-civ-gold: oklch(0.77 0.14 91.04);
   --color-civ-silver: oklch(0.9 0.03 255);
+
+  --text-tiny: 0.25rem;
+  --text-tiny--line-height: calc(--text-tiny * 1.5); 
+  --text-tiny--letter-spacing: calc(--text-tiny / 10); 
+  --text-tiny--font-weight: 400; 
 }
 
 /* Balance headings */
@@ -35,6 +52,10 @@ p,li,figcaption {
 /* Container query bounds */
 header, footer, main, section, article {
   container-type: inline-size;
+}
+
+button {
+  @apply cursor-pointer;
 }
 
 /**********/

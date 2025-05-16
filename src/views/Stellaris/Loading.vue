@@ -1,118 +1,59 @@
 <script setup lang="ts">
   import Example from '@/components/Example.vue';
-  import { onMounted, ref, useTemplateRef } from 'vue';
+  import { ref } from 'vue';
 
-  import img from '@/assets/examples/Civ-7/Loading.png'
+  import img from '@/assets/examples/Stellaris/Loading.png';
+  import imgBg from '@/assets/examples/Stellaris/bg/planet.png';
 
   const DURATION_IN_MILLS = 10000;
   const loadingDuration = ref(`${DURATION_IN_MILLS}ms`);
-  
-  const hourglassSand = useTemplateRef('hg-sand');
-  const hourglassWrapper = useTemplateRef('hg-wrapper');
-
-  onMounted(() => {
-    setTimeout(() => {
-      
-      hourglassWrapper.value?.classList.add('animation-pause', 'opacity-0');
-      hourglassSand.value?.classList.add('animation-pause');
-    },
-    DURATION_IN_MILLS)
-  })
 
 </script>
 
 <template>
   <section
     id="ConstrainedCanvas"
-    class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw]"
+    class="w-[80vw] aspect-video bg-slate-500 mx-auto mt-[2vw] stellaris-font-equiv"
   >
     <section class="bg-black size-full grid-area-stack relative">
-      <div
-        ref="hg-wrapper"
-        class="grid-area-stack relative self-center mx-auto animate-staggered-rotate "
+      <img
+        class="w-full aspect-video"
+        :src="imgBg" 
+        alt=""
+        aria-hidden
+      />
+      <div 
+        class="
+          w-full h-5
+          bg-emerald-700/30
+          self-end
+          max-w-[20rem] mx-auto mb-12
+          relative
+          border border-slate-600/50
+          
+          after:bg-emerald-700z
+          after:bg-gradient-to-tr after:via-40%
+          after:from-emerald-900 after:via-emerald-800/50 after:to-teal-500/50
+          after_animate-loading-width 
+          after:absolute after:size-full
+
+          before:absolute before:size-full
+          before_current-percent before:text-slate-300 before:z-10 
+          before:text-center before:text-sm
+        "
       >
-        <div 
-          ref="hg-outer"
-          class="
-          w-[3vw] h-[4vw] 
-          bg-civ-brand 
-          hourglass-clip
-        "
-        >
-        </div>
-        <div 
-          ref="hg-inner"
-          class="
-          w-[3vw] h-[4vw] 
-          bg-black
-          hourglass-clip-inner
-        "
-        >
-          <div 
-            ref="hg-sand"
-            class="w-full h-[2vw] bg-amber-100 animate-sand-fall"
-          ></div>
-        </div>
       </div>
-      <div class="w-full bg-civ-brand h-[1%] self-end"></div>
-      <div class="w-[2%] bg-civ-gold h-[1%] self-end animate-loading-width"></div>
     </section>
   </section>
   <Example :path="img">
-    <p>Rather than using a <span class="bg-black text-white px-1 rounded-sm">clip-path</span> and translate for the hourglass and sand, these should be a small animated gif / video, of the sand falling once, then we can rotate them, as this would halve the size of the video / gif embed</p>
+    <p>The exact background hasn't been uploaded into the Stellaris imgr yet so using a similar existing one</p>
   </Example>
 </template>
 
 <style lang="css" scoped>
-  * {
-    --hourglass-duration: 2500ms;
-    --hourglass-sand-duration: 1000ms;
-  }
+  @reference "@/main.css";
 
-  .hourglass-clip-inner {
-    clip-path: polygon(
-      4px 2px,
-      calc(100% - 4px) 2px,
-      calc(55% - 2px) calc(45% - 2px),
-      calc(55% - 2px) calc(55% + 2px),
-      calc(100% - 4px) calc(100% - 2px),
-      4px calc(100% - 2px),
-      calc(45% + 2px) calc(55% + 2px),
-      calc(45% + 2px) calc(45% - 2px),
-      4px 2px
-    );
-  }
-  .hourglass-clip {
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      55% 45%,
-      55% 55%,
-      100% 100%,
-      0 100%,
-      45% 55%,
-      45% 45%,
-      0 0
-    );
-  }
-
-  .animate-sand-fall {
-    animation-fill-mode: forwards;
-    animation-duration: var(--hourglass-duration);
-    animation-name: sandFall;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-  }
-
-  @keyframes sandFall {
-    0% {
-      transform: translateY(0);
-    }
-    30%, 100% {
-      transform: translateY(120%);
-    }
-  }
-
+  .after_animate-loading-width::after,
   .animate-loading-width{
     animation-fill-mode: forwards;
     animation-duration: v-bind(loadingDuration);
@@ -134,20 +75,38 @@
     }
   }
 
-.animate-staggered-rotate{
-  animation-fill-mode: forwards;
-  animation-duration: var(--hourglass-duration);
-  animation-name: staggeredRotate;
-  animation-iteration-count: infinite;
-}
 
-@keyframes staggeredRotate {
-  0%,25%{
-    rotate: 0deg;
+  @property --num {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
   }
-  75%, 100%{
-    rotate: 180deg;
+
+  .before_current-percent {
+    animation-fill-mode: forwards;
+    animation-name: counter;
+    animation-duration: v-bind(loadingDuration);
+    counter-reset: num var(--num);
+
   }
-}
+
+  .before_current-percent::before {
+    content: counter(num) "%";
+  }
+
+  @keyframes counter {
+    0%{
+      --num: 0;
+    }
+    10%{
+      --num: 5;
+    }
+    20%{
+      --num: 8;
+    }
+    100%{
+      --num: 100;
+    }
+  }
 
 </style>

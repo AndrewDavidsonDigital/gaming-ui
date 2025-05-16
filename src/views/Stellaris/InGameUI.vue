@@ -10,7 +10,7 @@
   import SwitchToggle from '@/components/SwitchToggle.vue';
   import CharacterBanner from '@/components/CharacterBanner.vue';
 
-  import imgGame from '@/assets/examples/Civ-7/GameUI.png'
+  import imgGame from '@/assets/examples/Stellaris/GameUI.png'
   import imgBG from '@/assets/examples/Civ-7/BG.png'
   import imgIcon2K from '@/assets/examples/Civ-7/elements/Icon_2k.png';
   import imgBook from '@/assets/examples/Civ-7/elements/Icon_Book.png';

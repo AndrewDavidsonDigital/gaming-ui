@@ -1,8 +1,8 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
-  import { computed } from 'vue';
-  import { routes } from '@/router'
+  import { computed, onMounted } from 'vue';
+  import { resolveGameFromRoute, routes } from '@/router'
   import GameSwitcher from './GameSwitcher.vue';
   import { useGame } from '@/stores/game';
 
@@ -12,6 +12,17 @@
 
   const routesStellaris = computed(() => routes.filter(el => el.game === 'Stellaris'));
   const routesCiv = computed(() => routes.filter(el => el.game === 'Civ-7'));
+
+  onMounted(() => {
+    setTimeout(() => {
+      const gameName = resolveGameFromRoute(currentRoute);
+      if (gameStore.game !== gameName){
+        gameStore._setType(gameName)
+      }
+      console.log(gameStore.game);
+
+    }, 100)
+  })
 
 </script>
 

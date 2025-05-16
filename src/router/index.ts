@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import type { IRoute } from '@/lib/interfaces';
+import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } from 'vue-router'
+import type { GameType, IRoute } from '@/lib/interfaces';
 
 import Landing from '@/views/Landing.vue'
 
@@ -72,3 +72,6 @@ const router = createRouter({
 
 export default router;
 
+export function resolveGameFromRoute(route: IRoute | RouteLocationNormalizedLoaded): GameType{
+  return routes.find(el => el.name === route.name)?.game || 'Civ-7';
+}
