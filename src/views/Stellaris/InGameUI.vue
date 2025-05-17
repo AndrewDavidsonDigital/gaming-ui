@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
   import Example from '@/components/Example.vue';
 
   import imgGame from '@/assets/examples/Stellaris/GameUI.png'
@@ -93,9 +93,9 @@
     imgLeftMarket,
   ])
 
-  type GameSpeedType = ['Slowest', 50] | ['Slow', 20] | ['Normal', 10] | ['Fast', 5] | ['Fastest', 2];
+  type GameSpeedType = ['Slowest', 40] | ['Slow', 20] | ['Normal', 10] | ['Fast', 5] | ['Fastest', 2];
   const orderedSpeedType: GameSpeedType[] = [
-    ["Slowest", 50], 
+    ["Slowest", 40], 
     ["Slow", 20], 
     ["Normal", 10], 
     ["Fast", 5], 
@@ -248,6 +248,17 @@
   }
 
   const currencyCount = computed(() => currencyCollection.value.reduce((a,b) => a + b.length,0));
+
+  
+  const gameSpeed = computed(() => gameState.value.speed);
+  const isPaused = computed(() => gameState.value.isPaused);
+
+  watch(isPaused, (newVal) => {
+    console.log(Date.now(), ': Game is now', newVal ? 'Paused' : 'Running');
+  });
+  watch(gameSpeed, (newVal) => {
+    console.log(Date.now(), ': Game speed is now set to', newVal[0]);
+  });
 
 </script>
 
@@ -410,14 +421,29 @@
           </template>
         </article>
         <div class="grid-area-stack-inner w-32">
-          <IconSpeedBG
-            class="mx-auto self-center transition-all duration-200 scale-dynamic"
-            :class="[
-              { 'fill-red-500/80' : gameState.isPaused },
-              { 'fill-emerald-300/80' : !(gameState.isPaused) },
-            ]"
-          />
-          <article class="flex gap-2 whitespace-nowrap place-content-end w-full items-center">
+          <div class="max-w-[6rem] place-self-center outline-1 outline-red-500 overflow-x-hidden mask-fade-x">
+            <div 
+              class="inline-flex justify-between transition-all duration-200 scale-dynamic flex-nowrap animate-scroll-x w-fit"
+              :class="[
+                { 'animation-pause': gameState.isPaused }
+              ]"
+              :style="`--animation-speed-duration: ${gameState.speed[1]}s;`"
+            >
+              <template
+                v-for="i in 10"
+                :key="`carouse_${i}`"
+              >
+                <IconSpeedBG
+                  class="mx-auto self-center"
+                  :class="[
+                    { 'fill-red-500/80' : gameState.isPaused },
+                    { 'fill-emerald-300/80' : !(gameState.isPaused) },
+                  ]"
+                />
+              </template>
+            </div>
+          </div>
+          <article class="flex gap-2 whitespace-nowrap place-content-end w-full items-center z-10">
             <button
               class="text-emerald-300 transition-all duration-200 scale-dynamic [&>svg_[data-index='2']]:opacity-70 [&>svg_[data-index='3']]:opacity-50"
               @click="handleSpeedChange(0)"
@@ -469,6 +495,7 @@
 
 <style lang="css" scoped>
   * {
+    --animation-speed-duration: 20s;
     --column-count: 1;
     --rhombus-cut: 1.25rem;
     --clip-path-rhombus: polygon(
@@ -503,5 +530,31 @@
 
   .scale-dynamic {
     scale: var(--dynamic-scale);
+  }
+
+  .mask-fade-x {
+    mask: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.5) 30%, 
+      rgba(255, 255, 255, 0.5) 70%, 
+      transparent
+    );
+  }
+
+  .animate-scroll-x {
+    animation-name: scroll-x;
+    animation-duration: var(--animation-speed-duration);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes scroll-x {
+    0% {
+      transform: translate(-30%);
+    }
+    100% {
+      transform: translate(0%);
+    }
   }
 </style>
