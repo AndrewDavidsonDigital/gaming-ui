@@ -270,7 +270,7 @@
   }
 
   /* ------------------------------------ Game Loop ------------------------------------------------ */
-  const gameLoopId = ref<ReturnType<typeof setInterval>>(-1);
+  const gameLoopId = ref<number>(-1);
   const MIN_TICK = 125;
   const lastTick = ref<number>(-1);
 
@@ -278,7 +278,7 @@
     gameLoopId.value = setInterval(
       () => nextTick(),
       (MIN_TICK * gameSpeed.value[1])
-    );
+    ) as unknown as number;
   }
 
   function stopTicker(){
