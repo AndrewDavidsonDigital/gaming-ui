@@ -12,8 +12,12 @@ import IconSpeedNormal from "./IconSpeedNormal.vue";
 import IconSpeedSlow from "./IconSpeedSlow.vue";
 import IconSpeedSlowest from "./IconSpeedSlowest.vue";
 
+import IconPlus from "./IconPlus.vue";
+import IconMinus from "./IconMinus.vue";
 
 export {
+  IconPlus,
+  IconMinus,
   IconCommunity,
   IconDocumentation,
   IconEcosystem,

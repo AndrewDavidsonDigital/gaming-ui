@@ -48,8 +48,33 @@
     IconSpeedNormal,
     IconSpeedSlow,
     IconSpeedSlowest,
+    IconPlus,
+    IconMinus,
   } from '@/components/icons';
 
+  /**
+   * Tuple: String: name, Number: Duration
+   */
+  type GameSpeedType = ['Slowest', 16] | ['Slow', 12] | ['Normal', 8] | ['Fast', 4] | ['Fastest', 2];
+  type SpeedIndexType = 1 | 2;
+
+  interface IGameState {
+    epoch: Date;
+    speed: GameSpeedType;
+    isPaused: boolean;
+    currency: ICurrency[][];
+  }
+
+  interface ICurrency {
+    current?: number;
+    increase?: number;
+    maxCapacity?: number;
+  }
+  
+  interface ISpeedConfig {
+    activeIndex: SpeedIndexType;
+    speeds: [GameSpeedType,GameSpeedType,GameSpeedType],
+  }
   
   const currencyCollection = ref<string[][]>([
     [
@@ -93,42 +118,18 @@
     imgLeftMarket,
   ])
 
-  type GameSpeedType = ['Slowest', 40] | ['Slow', 20] | ['Normal', 10] | ['Fast', 5] | ['Fastest', 2];
   const orderedSpeedType: GameSpeedType[] = [
-    ["Slowest", 40], 
-    ["Slow", 20], 
-    ["Normal", 10], 
-    ["Fast", 5], 
+    ["Slowest", 16], 
+    ["Slow", 12], 
+    ["Normal", 8], 
+    ["Fast", 4], 
     ["Fastest", 2]
   ]
 
-  interface IGameState {
-    epoch: IEpoch;
-    speed: GameSpeedType;
-    isPaused: boolean;
-    currency: ICurrency[][];
-  }
-
-  interface ICurrency {
-    current?: number;
-    increase?: number;
-    maxCapacity?: number;
-  }
-
-  interface IEpoch {
-    year: number;
-    month: number;
-    day: number;
-  }
-
   const gameState = ref<IGameState>({
-    epoch: {
-      year: 2200,
-      month: 1,
-      day: 1,
-    },
-    speed: ['Normal', 10],
-    isPaused: false,
+    epoch: new Date('2200.1.1'),
+    speed: ['Normal', 8],
+    isPaused: true,
     currency: [
       [
         {
@@ -166,6 +167,7 @@
         {
           current: 970,
           increase: 5,
+          maxCapacity: 1000,
         },
         {
           current: 16000,
@@ -196,6 +198,16 @@
   });
 
   const lockLeftBar = ref<boolean>(false);
+
+  // never access speeds[0] as this is padding as access renderer's are 1 indexed rather than 0
+  const speedLayer = ref<ISpeedConfig>({
+    activeIndex: 1,
+    speeds: [
+      ["Normal", 8],
+      ["Normal", 8],
+      ["Normal", 8],
+    ]
+  });
 
   function handleSpeedChange(increment: 0 | 1 | -1){
     const currentSpeedIndex = orderedSpeedType.findIndex(el => el[0] === gameState.value.speed[0]);
@@ -238,8 +250,8 @@
     let count = num;
     let tag = '';
     for (const format of numberFormats) {
-      if (num > format.amount) {
-        count = num / format.amount;
+      if (num >= format.amount) {
+        count = parseInt((num / format.amount).toFixed(0));
         tag = format.tag;
       }
     }
@@ -247,18 +259,81 @@
     return `${count}${tag}`
   }
 
+  function alternateSpeedIndexLayer(newSpeed: GameSpeedType){
+    if (speedLayer.value.activeIndex === 2){
+      speedLayer.value.speeds[1] = newSpeed;
+      speedLayer.value.activeIndex = 1;
+    } else {
+      speedLayer.value.speeds[2] = newSpeed;
+      speedLayer.value.activeIndex = 2;
+    }
+  }
+
+  /* ------------------------------------ Game Loop ------------------------------------------------ */
+  const gameLoopId = ref<ReturnType<typeof setInterval>>(-1);
+  const MIN_TICK = 125;
+  const lastTick = ref<number>(-1);
+
+  function startTicker(){
+    gameLoopId.value = setInterval(
+      () => nextTick(),
+      (MIN_TICK * gameSpeed.value[1])
+    );
+  }
+
+  function stopTicker(){
+    if (gameLoopId.value && gameLoopId.value !== -1){
+      clearInterval(gameLoopId.value);
+    }
+  }
+
+  function nextTick(){
+    const now = Date.now();
+    console.log(now,`::Tick`);
+
+    // update lastTick
+    lastTick.value = now;
+
+    // increment date
+    gameState.value.epoch.setDate(gameState.value.epoch.getDate() + 1);
+
+    //increment currencies
+    gameState.value.currency.forEach(grp => grp.forEach( cur => {
+      if (cur.current && cur.maxCapacity && cur.current >= cur.maxCapacity){
+        return;
+      }
+      if (cur.increase && cur.current){
+        cur.current += cur.increase;
+      }
+    }))
+  }
+
+  /* --------------------------------- Reactive Functions --------------------------------------------- */
+
   const currencyCount = computed(() => currencyCollection.value.reduce((a,b) => a + b.length,0));
 
-  
   const gameSpeed = computed(() => gameState.value.speed);
   const isPaused = computed(() => gameState.value.isPaused);
 
   watch(isPaused, (newVal) => {
     console.log(Date.now(), ': Game is now', newVal ? 'Paused' : 'Running');
+    if (newVal){
+      stopTicker()
+    }else {
+      startTicker()
+    }
   });
+
   watch(gameSpeed, (newVal) => {
     console.log(Date.now(), ': Game speed is now set to', newVal[0]);
+    alternateSpeedIndexLayer(newVal);
+    if (!(isPaused.value)){
+      stopTicker();
+      startTicker();
+    }
   });
+
+/* ---------------------------------------------------------------------------------------------------- */
 
 </script>
 
@@ -301,7 +376,7 @@
         >
           <img
             :src="imgPlayer"
-            class="p-0.5"
+            class="p-0.5 size-full"
             role="presentation"
             alt=""
           />
@@ -379,7 +454,6 @@
       <section
         class="
           self-start
-          px-2
           flex justify-between
           bg-gradient-to-b from-emerald-900 to-slate-900
           border-b border-slate-900/50
@@ -387,7 +461,7 @@
         "
       >
         <article
-          class="grid grid-cols-n gap-x-3 ml-10"
+          class="grid grid-cols-n gap-x-3 ml-6 [&>article]:min-w-[2rem] scale-[75%]"
           :style="`--column-count: ${1 + currencyCount + (currencyCollection.length - 1)};`"
         >
           <template
@@ -405,7 +479,12 @@
                   alt=""
                   role="presentation"
                 />
-                <div class="text-xs text-slate-300/80 text-nowrap whitespace-nowrap">
+                <div 
+                  class="text-xs text-slate-200/80 text-nowrap whitespace-nowrap"
+                  :class="[
+                    { '!text-yellow-200': gameState.currency[gIndex][index].current !== undefined && gameState.currency[gIndex][index].maxCapacity !== undefined && gameState.currency[gIndex][index].maxCapacity <= gameState.currency[gIndex][index].current },
+                  ]"
+                >
                   <span v-if="Object.keys(gameState.currency[gIndex][index]).includes('current') && gameState.currency[gIndex][index].current !== undefined"> {{ condenseNumber(gameState.currency[gIndex][index].current) }}</span>
                   <span v-if="gameState.currency[gIndex][index].increase"> +{{ gameState.currency[gIndex][index].increase }}</span>
                   <span v-else-if="gameState.currency[gIndex][index].maxCapacity">/{{ gameState.currency[gIndex][index].maxCapacity }}</span>
@@ -420,62 +499,92 @@
             ></div>
           </template>
         </article>
-        <div class="grid-area-stack-inner w-32">
-          <div class="max-w-[6rem] place-self-center outline-1 outline-red-500 overflow-x-hidden mask-fade-x">
+        <div class="grid-area-stack-inner w-32 mr-1">
+          <template
+            v-for="n in 2"
+            :key="`speed_gauge_${n}`"
+          >
             <div 
-              class="inline-flex justify-between transition-all duration-200 scale-dynamic flex-nowrap animate-scroll-x w-fit"
+              class="
+                max-w-[6rem] place-self-center overflow-hidden mask-fade-x
+                opacity-0 transition-opacity duration-1000
+                blur-[0.1rem] max-h-[1.5rem]
+              "
               :class="[
-                { 'animation-pause': gameState.isPaused }
+                { '!opacity-100': speedLayer.activeIndex === n },
+                { '!duration-500': speedLayer.activeIndex !== n }
               ]"
-              :style="`--animation-speed-duration: ${gameState.speed[1]}s;`"
             >
-              <template
-                v-for="i in 10"
-                :key="`carouse_${i}`"
+              <div 
+                class="inline-flex justify-between transition-transform duration-200 flex-nowrap animate-scroll-x w-fit scale-dynamic max-h-[1.5rem]"
+                :class="[
+                  { 'animation-pause': gameState.isPaused }
+                ]"
+                :style="`--animation-speed-duration: ${speedLayer.speeds[n][1]}s;`"
               >
-                <IconSpeedBG
-                  class="mx-auto self-center"
-                  :class="[
-                    { 'fill-red-500/80' : gameState.isPaused },
-                    { 'fill-emerald-300/80' : !(gameState.isPaused) },
-                  ]"
-                />
-              </template>
+                <template
+                  v-for="i in 10"
+                  :key="`carouse_${i}`"
+                >
+                  <IconSpeedBG
+                    class="mx-auto self-center"
+                    :class="[
+                      { 'fill-orange-500/80' : gameState.isPaused },
+                      { 'fill-emerald-300/80' : !(gameState.isPaused) },
+                    ]"
+                  />
+                </template>
+              </div>
             </div>
-          </div>
-          <article class="flex gap-2 whitespace-nowrap place-content-end w-full items-center z-10">
+          </template>
+          <article class="flex gap-2 whitespace-nowrap place-content-end w-full items-center z-10 max-h-[1.5rem]">
             <button
               class="text-emerald-300 transition-all duration-200 scale-dynamic [&>svg_[data-index='2']]:opacity-70 [&>svg_[data-index='3']]:opacity-50"
               @click="handleSpeedChange(0)"
             >
               <IconSpeedPaused
                 v-if="gameState.isPaused"
+                class="fill-orange-300/80 scale-[75%]"
               />
               <IconSpeedFastest v-else-if="gameState.speed[0] === 'Fastest'" />
               <IconSpeedFast v-else-if="gameState.speed[0] === 'Fast'" />
-              <IconSpeedNormal v-else-if="gameState.speed[0] === 'Normal'" />
-              <IconSpeedSlow v-else-if="gameState.speed[0] === 'Slow'" />
-              <IconSpeedSlowest v-else-if="gameState.speed[0] === 'Slowest'" />
+              <IconSpeedNormal
+                v-else-if="gameState.speed[0] === 'Normal'"
+                class="scale-[75%]"
+              />
+              <IconSpeedSlow
+                v-else-if="gameState.speed[0] === 'Slow'"
+                class="scale-[85%]"
+              />
+              <IconSpeedSlowest
+                v-else-if="gameState.speed[0] === 'Slowest'"
+                class="scale-[85%]"
+              />
             </button>
             <button
               class="text-sm w-fit flex flex-col [&>*]:mx-auto [&>*]:text-xs min-w-[4rem]"
               @click="handleSpeedChange(0)"
             >
-              <span class="text-slate-400 ">{{ gameState.epoch.year }}.{{ gameState.epoch.month }}.{{ gameState.epoch.day }}</span>
+              <span
+                :key="lastTick"
+                class="text-slate-300 text-glow-darken mb-[-0.2rem]"
+              >{{ gameState.epoch.getFullYear() }}.{{ gameState.epoch.toLocaleString('en-AU', { month: '2-digit'}) }}.{{ gameState.epoch.toLocaleString('en-AU', { day: '2-digit'}) }}</span>
               <span class="text-emerald-300">{{ gameState.isPaused ? 'Paused' : gameState.speed[0] + ' Speed' }}</span>
             </button>
-            <button
-              class="rounded-full bg-emerald-500/50 size-[0.675rem] inline-flex justify-around items-center"
-              @click="handleSpeedChange(1)"
-            >
-              <span class="text-xs text-emerald-300">+</span>
-            </button>
-            <button
-              class="rounded-full bg-emerald-500/50 size-[0.675rem] inline-flex justify-around items-center "
-              @click="handleSpeedChange(-1)"
-            >
-              <span class="text-xs text-emerald-300">-</span>
-            </button>
+            <div class="flex gap-0.5">
+              <button
+                class="rounded-full bg-emerald-700/40 size-[0.675rem] grid place-content-center scale-dynamic-sm overflow-clip"
+                @click="handleSpeedChange(1)"
+              >
+                <IconPlus class="stroke-emerald-200 stroke--2 stroke-cap-round scale-[50%]" />
+              </button>
+              <button
+                class="rounded-full bg-emerald-700/40 size-[0.675rem] grid place-content-center scale-dynamic-sm overflow-clip"
+                @click="handleSpeedChange(-1)"
+              >
+                <IconMinus class="stroke-emerald-200 stroke--2 stroke-cap-round scale-[50%]" />
+              </button>
+            </div>
           </article>
         </div>
       </section>
@@ -530,6 +639,12 @@
 
   .scale-dynamic {
     scale: var(--dynamic-scale);
+  }
+  .scale-dynamic-sm {
+    scale: calc(var(--dynamic-scale) * 0.75);
+  }
+  .scale-dynamic-lg {
+    scale: calc(var(--dynamic-scale) * 1.25);
   }
 
   .mask-fade-x {

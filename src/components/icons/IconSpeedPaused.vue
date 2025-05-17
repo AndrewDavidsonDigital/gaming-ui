@@ -8,12 +8,12 @@
     <rect
       x="6"
       y="4"
-      width="4"
+      width="2"
       height="16"
     ></rect><rect
-      x="14"
+      x="16"
       y="4"
-      width="4"
+      width="2"
       height="16"
     ></rect>
   </svg>

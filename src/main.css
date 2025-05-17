@@ -94,6 +94,10 @@ button {
   animation-play-state: running;
 }
 
+.stroke-cap-round {
+  stroke-linecap: round;
+}
+
 details > summary {
   @apply cursor-pointer;
 }
@@ -110,4 +114,11 @@ select {
     @apply bg-slate-700;
     @apply border rounded-none;
   }
+}
+
+.text-glow {
+  text-shadow: rgb(255, 242, 194) 1px 0 5px;
+}
+.text-darken-glow {
+  text-shadow: rgb(41, 40, 36) 1px 0 5px;
 }

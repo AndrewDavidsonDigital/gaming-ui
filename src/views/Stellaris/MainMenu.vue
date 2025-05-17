@@ -171,11 +171,4 @@ const socialsCollection = ref<string[][]>([
   .bg-clip-corner {
     clip-path: var(--clip-path-folded-corner);
   }
-
-  .text-glow {
-    text-shadow: rgb(255, 242, 194) 1px 0 5px;
-  }
-  .text-darken-glow {
-    text-shadow: rgb(41, 40, 36) 1px 0 5px;
-  }
 </style>
