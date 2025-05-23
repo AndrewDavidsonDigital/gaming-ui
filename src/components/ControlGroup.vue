@@ -21,6 +21,7 @@
       border border-transparent
       dynamic-bg
       grid-area-stack
+      transition-all
 
       hover:border-t-amber-500
       hover:!bg-amber-700/40
@@ -41,11 +42,11 @@
       ''
     "
   >
-    <div class="mb-auto h-1 w-full group-hover:border-l group-hover:border-r group-hover:border-t group-hover:border-amber-500">
+    <div class="mb-auto h-1 w-full border-l border-r border-t border-amber-500/0 group-hover:border-amber-500 transition-all duration-300">
     </div>
-    <div class="mt-auto mr-auto size-1 group-hover:border-l group-hover:border-b group-hover:border-amber-500">
+    <div class="mt-auto mr-auto size-1 border-l border-b border-amber-500/0 group-hover:border-amber-500 transition-all duration-300">
     </div>
-    <div class="mt-auto ml-auto size-1 group-hover:border-r group-hover:border-b group-hover:border-amber-500">
+    <div class="mt-auto ml-auto size-1 border-r border-b border-amber-500/0 group-hover:border-amber-500 transition-all duration-300">
     </div>
     <div class="flex gap-1 items-center px-1">
       <p>{{ props.controlKey }}</p>
