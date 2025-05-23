@@ -29,7 +29,7 @@
 
 <template>
   <main
-    class="bg-slate-800 text-green-500 min-h-screen min-w-full"
+    class="bg-slate-800 text-green-500 min-h-screen min-w-full pb-5"
     :style="`--dynamic-scale: ${scale};`"
   >
     <Navigation />
