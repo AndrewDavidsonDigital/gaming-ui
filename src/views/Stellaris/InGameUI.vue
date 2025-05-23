@@ -52,7 +52,8 @@
     IconMinus,
   } from '@/components/icons';
   import type { ControlKeyType, ControlType } from '@/lib/interfaces';
-import ControlGroup from '@/components/ControlGroup.vue';
+  import ControlGroup from '@/components/ControlGroup.vue';
+  import GamePlaque from '@/components/GamePlaque.vue';
 
   /**
    * Tuple: String: name, Number: Duration
@@ -66,6 +67,12 @@ import ControlGroup from '@/components/ControlGroup.vue';
     isPaused: boolean;
     currency: ICurrency[][];
     controlGroups: IControlGroup[];
+    empire: IEmpire;
+  }
+
+  interface IEmpire {
+    name: string;
+    type: string;
   }
 
   interface IControlGroup {
@@ -136,6 +143,10 @@ import ControlGroup from '@/components/ControlGroup.vue';
   ]
 
   const gameState = ref<IGameState>({
+    empire: {
+      name: 'Devourer of Stars',
+      type: 'Blood Forrest',
+    },
     epoch: new Date('2200.1.1'),
     speed: ['Normal', 8],
     isPaused: true,
@@ -634,7 +645,23 @@ import ControlGroup from '@/components/ControlGroup.vue';
         </template>
       </div>
       <div class="mx-auto mt-auto">
-        Bottom Center
+        <GamePlaque
+          :empire-name="gameState.empire.name"
+          :empire-type="gameState.empire.type"
+        >
+          <template #player>
+            <article class="aspect-square w-11 grid-area-stack">
+              <div class="bg-clip-hexagon bg-emerald-900">
+                <img
+                  :src="imgPlayer"
+                  class="p-0.5 size-full"
+                  role="presentation"
+                  alt=""
+                />
+              </div>
+            </article>
+          </template>
+        </GamePlaque>
       </div>
       <div class="ml-auto mt-auto">
         Bottom Right

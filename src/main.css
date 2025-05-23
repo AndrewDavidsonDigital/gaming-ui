@@ -32,6 +32,11 @@
   --color-civ-gold: oklch(0.77 0.14 91.04);
   --color-civ-silver: oklch(0.9 0.03 255);
 
+  --text-mlg: 0.75rem;
+  --text-mlg--line-height: calc(--text-mlg * 1.25); 
+  --text-mlg--letter-spacing: calc(--text-mlg / 10); 
+  --text-mlg--font-weight: 400; 
+
   --text-xs: 0.5rem;
   --text-xs--line-height: calc(--text-tiny * 1.25); 
   --text-xs--letter-spacing: calc(--text-tiny / 10); 
