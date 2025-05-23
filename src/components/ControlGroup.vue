@@ -19,19 +19,27 @@
     class="
       text-xs text-slate-200 
       border border-transparent
+      dynamic-bg
       grid-area-stack
 
       hover:border-t-amber-500
-      hover:bg-amber-700/40
+      hover:!bg-amber-700/40
 
       group
     " 
     :class="[
-      { 'bg-red-600/20 border-t-red-300/50' : props.type === 'Military' },
-      { 'bg-emerald-600/20 border-t-emerald-300/50' : props.type === 'Planet' },
-      { 'bg-amber-600/20 border-t-amber-300/50' : props.type === 'Civilian' },
-      { 'bg-blue-600/20 border-t-blue-300/50' : props.type === 'Other' },
+      { 'border-t-red-300/50' : props.type === 'Military' },
+      { 'border-t-emerald-300/50' : props.type === 'Planet' },
+      { 'border-t-amber-300/50' : props.type === 'Civilian' },
+      { 'border-t-blue-300/50' : props.type === 'Other' },
     ]"
+    :style="
+      props.type === 'Military' ? '--bg-colour: oklch(57.7% 0.245 27.325)' : 
+      props.type === 'Civilian' ? '--bg-colour: oklch(66.6% 0.179 58.318)' :
+      props.type === 'Planet' ? '--bg-colour: oklch(59.6% 0.145 163.225)' :
+      props.type === 'Other' ? '--bg-colour: oklch(54.6% 0.245 262.881)' : 
+      ''
+    "
   >
     <div class="mb-auto h-1 w-full group-hover:border-l group-hover:border-r group-hover:border-t group-hover:border-amber-500">
     </div>
@@ -74,4 +82,16 @@
 </template>
 
 <style scoped>
+  * {
+    --bg-colour: oklch(57.7% 0.245 27.325);
+  }
+
+  .dynamic-bg {
+    background: repeating-linear-gradient(
+      color-mix(in oklab, var(--bg-colour) 20%, transparent) 0,
+      color-mix(in oklab, var(--bg-colour) 20%, transparent) max(0.05rem, 1px),
+      color-mix(in oklab, var(--bg-colour) 5%, transparent) max(0.05rem, 3px)
+    );
+  }
+
 </style>
