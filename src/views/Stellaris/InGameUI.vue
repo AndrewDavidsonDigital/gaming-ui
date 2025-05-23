@@ -54,6 +54,7 @@
   import type { ControlKeyType, ControlType } from '@/lib/interfaces';
   import ControlGroup from '@/components/ControlGroup.vue';
   import GamePlaque from '@/components/GamePlaque.vue';
+import Alert from '@/components/Alert.vue';
 
   /**
    * Tuple: String: name, Number: Duration
@@ -68,6 +69,12 @@
     currency: ICurrency[][];
     controlGroups: IControlGroup[];
     empire: IEmpire;
+    alerts: IAlert[];
+  }
+
+  interface IAlert {
+    name: string;
+    type: AlertType;
   }
 
   interface IEmpire {
@@ -237,6 +244,20 @@
         group: [],
       },
     ],
+    alerts: [
+      {
+        name: 'Research',
+        type: 'Research_Physics'
+      },
+      {
+        name: 'Research',
+        type: 'Research_Engineering'
+      },
+      {
+        name: 'Rift',
+        type: 'Rift'
+      },
+    ]
   });
 
   const lockLeftBar = ref<boolean>(false);
@@ -633,6 +654,17 @@
           </article>
         </div>
       </section>
+      <div class="mr-auto mb-auto ml-12 mt-9 w-44 flex gap-2 justify-end">
+        <template
+          v-for="alert, index in gameState.alerts"
+          :key="`alerts_${index}`"
+        >
+          <Alert
+            :name="alert.name"
+            :type="alert.type"
+          />
+        </template>
+      </div>
       <div class="mr-auto mt-auto flex gap-x-2 mb-0.5 ml-0.5">
         <template
           v-for="group, gIndex in gameState.controlGroups"
@@ -673,7 +705,7 @@
 
 <style lang="css" scoped>
   @reference "@/main.css";
-  * {
+  * { 
     --animation-speed-duration: 20s;
     --column-count: 1;
     --rhombus-cut: 1.25rem;

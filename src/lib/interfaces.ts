@@ -8,6 +8,7 @@ export type ColourType = 'Red' | 'Yellow' | 'Green' | 'Cyan' | 'Orange' ;
 export type GameType = 'Civ-7' | 'Stellaris';
 export type ControlKeyType = '1' | '2' | '3' | '4' | '5';
 export type ControlType = 'Military' | 'Civilian' | 'Planet' | 'Other';
+export type AlertType = 'Rift' | 'Research_Bio' | 'Research_Physics' | 'Research_Engineering';
 
 export interface ICurrency {
   type: CurrencyType;
