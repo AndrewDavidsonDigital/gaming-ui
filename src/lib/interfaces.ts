@@ -6,6 +6,8 @@ export type SizeType = 'sm' | 'md' | 'lg';
 export type DiplomacyStateType = 'War' | 'Antagonistic' | 'Neutral' | 'Friendly' | 'Allied' ;
 export type ColourType = 'Red' | 'Yellow' | 'Green' | 'Cyan' | 'Orange' ;
 export type GameType = 'Civ-7' | 'Stellaris';
+export type ControlKeyType = '1' | '2' | '3' | '4' | '5';
+export type ControlType = 'Military' | 'Civilian' | 'Planet' | 'Other';
 
 export interface ICurrency {
   type: CurrencyType;

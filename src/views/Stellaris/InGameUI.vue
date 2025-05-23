@@ -51,6 +51,8 @@
     IconPlus,
     IconMinus,
   } from '@/components/icons';
+  import type { ControlKeyType, ControlType } from '@/lib/interfaces';
+import ControlGroup from '@/components/ControlGroup.vue';
 
   /**
    * Tuple: String: name, Number: Duration
@@ -63,6 +65,13 @@
     speed: GameSpeedType;
     isPaused: boolean;
     currency: ICurrency[][];
+    controlGroups: IControlGroup[];
+  }
+
+  interface IControlGroup {
+    key: ControlKeyType;
+    type: ControlType;
+    group: any[];
   }
 
   interface ICurrency {
@@ -194,7 +203,29 @@
           maxCapacity: 109,
         }
       ]
-    ]
+    ],
+    controlGroups: [
+      {
+        key: '1',
+        type: 'Military',
+        group: [],
+      },
+      {
+        key: '2',
+        type: 'Planet',
+        group: [],
+      },
+      {
+        key: '3',
+        type: 'Civilian',
+        group: [],
+      },
+      {
+        key: '4',
+        type: 'Other',
+        group: [],
+      },
+    ],
   });
 
   const lockLeftBar = ref<boolean>(false);
@@ -499,7 +530,10 @@
             ></div>
           </template>
         </article>
-        <div class="grid-area-stack-inner w-32 mr-1">
+        <div
+          class="grid-area-stack-inner max-w-40 w-full pr-1"
+          :class="[{'mask-fade-bg' : gameState.isPaused}]"
+        >
           <template
             v-for="n in 2"
             :key="`speed_gauge_${n}`"
@@ -588,8 +622,16 @@
           </article>
         </div>
       </section>
-      <div class="mr-auto mt-auto">
-        Bottom left
+      <div class="mr-auto mt-auto flex gap-x-2 mb-0.5 ml-0.5">
+        <template
+          v-for="group, gIndex in gameState.controlGroups"
+          :key="`control_group_${gIndex}`"
+        >
+          <ControlGroup
+            :type="group.type"
+            :control-key="group.key"
+          />
+        </template>
       </div>
       <div class="mx-auto mt-auto">
         Bottom Center
@@ -603,6 +645,7 @@
 </template>
 
 <style lang="css" scoped>
+  @reference "@/main.css";
   * {
     --animation-speed-duration: 20s;
     --column-count: 1;
@@ -645,6 +688,16 @@
   }
   .scale-dynamic-lg {
     scale: calc(var(--dynamic-scale) * 1.25);
+  }
+
+  .mask-fade-bg {
+    background: oklch(0.65 0.24 32.38 / 0.27);
+    mask: linear-gradient(
+      90deg,
+      transparent,
+      white 20%,
+      white
+    )
   }
 
   .mask-fade-x {
