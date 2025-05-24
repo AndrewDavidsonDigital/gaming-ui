@@ -9,7 +9,7 @@
     v-model="gameStore.game"
     aria-label="Same Selector"
 
-    class="border-none"
+    class="border-none bg-slate-900"
   >
     <option value="Civ-7">
       Civilization 7

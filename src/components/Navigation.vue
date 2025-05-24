@@ -5,8 +5,10 @@
   import { resolveGameFromRoute, routes } from '@/router'
   import GameSwitcher from './GameSwitcher.vue';
   import { useGame } from '@/stores/game';
+  import { useBgmEngine } from '@/stores/audio';
 
   const gameStore = useGame();
+  const bgmEngine = useBgmEngine();
 
   const currentRoute = useRoute();
 
@@ -28,8 +30,27 @@
 
 <template>
   <header class="h-fit bg-slate-900 sticky top-0 z-nav">
-    <nav class="flex gap-x-4 justify-center">
+    <section class="flex justify-center gap-x-6 container-normal">
       <GameSwitcher />
+      <div class="ml-5 flex gap-1">
+        <button 
+          @click="() => bgmEngine.playPause()"
+        >
+          Mute
+        </button>
+        <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+        <input 
+          v-model="bgmEngine.volumeRaw"
+          type="range"
+          class="max-w-[6rem] thin-slider"
+          :min="0"
+          :max="1"
+          :step="0.05"
+          @input="() => bgmEngine.volumeRefresh()"
+        />
+      </div>
+    </section>
+    <nav class="flex gap-x-4 justify-center">
       <template
         v-if="gameStore.game === 'Stellaris'"
       >

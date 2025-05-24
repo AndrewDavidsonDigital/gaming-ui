@@ -23,6 +23,7 @@
   >
     <div class="grid-area-stack">
       <Example
+        key="MainMenu_Civ7"
         class="fromHidden transition-opacity duration-500"
         :class="[
           { 'opacity-100' : gameStore.game === 'Civ-7' },
@@ -34,6 +35,7 @@
         : Civilization 7 Main Menu
       </Example>
       <Example
+        key="MainMenu_Stellaris"
         class="fromHidden transition-opacity duration-500"
         :class="[
           { 'opacity-100' : gameStore.game === 'Stellaris' },
@@ -48,17 +50,19 @@
     <div class="grid-area-stack">
       <TransitionGroup>
         <Example
+          key="Loading_Civ7"
           class="fromHidden transition-opacity duration-500"
           :class="[
             { 'opacity-100' : gameStore.game === 'Civ-7' },
             { 'opacity-0' : gameStore.game !== 'Civ-7' },
-          ]"
-          :path="imgCiv7Loading" 
+          ]" 
+          :path="imgCiv7Loading"
           inline
         >
           : Civilization 7 Loading Screen
         </Example>
         <Example
+          key="Loading_Stellaris"
           class="fromHidden transition-opacity duration-500"
           :class="[
             { 'opacity-100' : gameStore.game === 'Stellaris' },
@@ -74,6 +78,7 @@
     <div class="grid-area-stack">
       <TransitionGroup>
         <Example
+          key="GameUI_Civ7"
           class="fromHidden transition-opacity duration-500"
           :class="[
             { 'opacity-100' : gameStore.game === 'Civ-7' },
@@ -85,6 +90,7 @@
           : Civilization 7 Game UI
         </Example>
         <Example
+          key="GameUI_Stellaris"
           class="fromHidden transition-opacity duration-500"
           :class="[
             { 'opacity-100' : gameStore.game === 'Stellaris' },
