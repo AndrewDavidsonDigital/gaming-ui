@@ -51,10 +51,10 @@
     IconPlus,
     IconMinus,
   } from '@/components/icons';
-  import type { ControlKeyType, ControlType } from '@/lib/interfaces';
+  import type { AlertType, ControlKeyType, ControlType } from '@/lib/interfaces';
   import ControlGroup from '@/components/ControlGroup.vue';
   import GamePlaque from '@/components/GamePlaque.vue';
-import Alert from '@/components/Alert.vue';
+  import Alert from '@/components/Alert.vue';
 
   /**
    * Tuple: String: name, Number: Duration

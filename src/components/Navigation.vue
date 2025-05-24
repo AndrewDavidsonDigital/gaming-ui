@@ -1,11 +1,12 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
-  import { computed, onMounted } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { resolveGameFromRoute, routes } from '@/router'
   import GameSwitcher from './GameSwitcher.vue';
   import { useGame } from '@/stores/game';
   import { useBgmEngine } from '@/stores/audio';
+  import { IconVolume, IconVolumeOff } from './icons';
 
   const gameStore = useGame();
   const bgmEngine = useBgmEngine();
@@ -14,6 +15,7 @@
 
   const routesStellaris = computed(() => routes.filter(el => el.game === 'Stellaris'));
   const routesCiv = computed(() => routes.filter(el => el.game === 'Civ-7'));
+  const isPaused = ref<boolean>(false);
 
   onMounted(() => {
     setTimeout(() => {
@@ -24,7 +26,33 @@
       console.log(gameStore.game);
 
     }, 100)
-  })
+  });
+
+  bgmEngine.$onAction((el)=> {
+    const startTime = Date.now()
+    console.log(`NAV $onAction: \t[${el.name}]` );
+    el.onError((error) => {
+      console.warn(
+        `Failed "${el.name}" after ${Date.now() - startTime}ms.\nError: ${error}.`
+      )
+    })
+
+    if (el.name === 'pause'){
+      el.after((_result) => {
+        console.log('pause-triggered');
+        isPaused.value = true;
+      })
+    }
+
+    else if (el.name === 'play'){
+      el.after((_result) => {
+        isPaused.value = false;
+      })
+    }
+    
+    // else { console.trace(`NAV OTHER CALL: \t${el.name}` );}
+  });
+
 
 </script>
 
@@ -36,7 +64,8 @@
         <button 
           @click="() => bgmEngine.playPause()"
         >
-          Mute
+          <IconVolumeOff v-show="isPaused" />
+          <IconVolume v-show="!isPaused" />
         </button>
         <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
         <input 

@@ -15,6 +15,9 @@ import IconSpeedSlowest from "./IconSpeedSlowest.vue";
 import IconPlus from "./IconPlus.vue";
 import IconMinus from "./IconMinus.vue";
 
+import IconVolume from "./IconVolume.vue";
+import IconVolumeOff from "./IconVolumeOff.vue";
+
 export {
   IconPlus,
   IconMinus,
@@ -25,10 +28,13 @@ export {
 
   IconSpeedBG,
   IconSpeedPaused,
-  
+
   IconSpeedFastest,
   IconSpeedFast,
   IconSpeedNormal,
   IconSpeedSlow,
   IconSpeedSlowest,
+
+  IconVolume,
+  IconVolumeOff,
 };
