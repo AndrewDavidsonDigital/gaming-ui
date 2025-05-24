@@ -17,7 +17,7 @@ import type { GameType } from './lib/interfaces';
   const BASE_FONT_SIZE = 16;
   const remSize = ref<number>();
 
-  const timerId = ref<number>();
+  const timerId = ref<ReturnType<typeof setTimeout>>();
 
   onMounted(() => {
     updateScale();
